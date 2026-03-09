@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamFlow Scale</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+[data-theme="dark"] {
+  --bg:#0c0e14; --surface:#13161f; --surface2:#1c202e; --border:#252b3b;
+  --text:#eef0f6; --muted:#6b7494; --accent:#4ade80; --accent-dim:rgba(74,222,128,.12);
+  --accent2:#818cf8; --accent2-dim:rgba(129,140,248,.12); --accent3:#fb923c;
+  --accent3-dim:rgba(251,146,60,.12); --danger:#f87171; --tg:#2aabee;
+  --shadow:0 2px 20px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.6);
+}
+[data-theme="light"] {
+  --bg:#f4f5f7; --surface:#ffffff; --surface2:#f0f1f4; --border:#e2e5ed;
+  --text:#111827; --muted:#6b7280; --accent:#16a34a; --accent-dim:rgba(22,163,74,.1);
+  --accent2:#4f46e5; --accent2-dim:rgba(79,70,229,.1); --accent3:#ea580c;
+  --accent3-dim:rgba(234,88,12,.1); --danger:#dc2626; --tg:#0088cc;
+  --shadow:0 2px 12px rgba(0,0,0,.08); --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+
+/* ONBOARDING */
+#onboarding { position:fixed; inset:0; z-index:200; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px; }
+.ob-card { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:40px; width:100%; max-width:440px; box-shadow:var(--shadow-lg); text-align:center; }
+.ob-logo { font-family:'Instrument Serif',serif; font-size:2.2rem; margin-bottom:4px; }
+.ob-logo span { color:var(--accent); font-style:italic; }
+.ob-step { display:none; }
+.ob-step.active { display:block; }
+.ob-icon { font-size:3rem; margin-bottom:16px; }
+.ob-title { font-size:1.3rem; font-weight:700; margin-bottom:8px; }
+.ob-desc { color:var(--muted); font-size:.88rem; line-height:1.6; margin-bottom:24px; }
+.ob-dots { display:flex; gap:6px; justify-content:center; margin-bottom:20px; }
+.ob-dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:background .2s; }
+.ob-dot.active { background:var(--accent); }
+.ob-btn { width:100%; padding:13px; background:var(--accent); color:#fff; border:none; border-radius:12px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.95rem; cursor:pointer; transition:opacity .2s; margin-bottom:8px; }
+.ob-btn:hover { opacity:.85; }
+.ob-btn.secondary { background:transparent; color:var(--muted); border:1px solid var(--border); margin-bottom:0; }
+
+/* LOGIN */
+#loginScreen { position:fixed; inset:0; z-index:100; background:var(--bg); display:none; align-items:center; justify-content:center; padding:20px; }
+.login-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:36px; width:100%; max-width:400px; box-shadow:var(--shadow-lg); }
+.login-logo { text-align:center; margin-bottom:28px; }
+.login-logo h1 { font-family:'Instrument Serif',serif; font-size:2rem; }
+.login-logo h1 span { color:var(--accent); font-style:italic; }
+.login-logo p { color:var(--muted); font-size:.83rem; margin-top:4px; }
+.field-label { font-size:.72rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; display:block; }
+.inp { width:100%; padding:11px 14px; background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; color:var(--text); font-family:'Outfit',sans-serif; font-size:.92rem; margin-bottom:14px; transition:border-color .2s; }
+.inp:focus { outline:none; border-color:var(--accent); }
+.inp::placeholder { color:var(--muted); }
+.btn-primary { width:100%; padding:12px; background:var(--accent); color:#fff; border:none; border-radius:10px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.93rem; cursor:pointer; transition:all .2s; margin-bottom:10px; }
+.btn-primary:hover { opacity:.85; transform:translateY(-1px); }
+.divider { text-align:center; color:var(--muted); font-size:.78rem; margin:12px 0; position:relative; }
+.divider::before,.divider::after { content:''; position:absolute; top:50%; width:42%; height:1px; background:var(--border); }
+.divider::before { left:0; } .divider::after { right:0; }
+.btn-manager { width:100%; padding:11px; background:transparent; color:var(--accent2); border:1.5px solid var(--accent2); border-radius:10px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:all .2s; }
+.btn-manager:hover { background:var(--accent2-dim); }
+.tg-hint { margin-top:16px; display:flex; align-items:center; gap:8px; background:rgba(42,171,238,.1); border:1px solid rgba(42,171,238,.25); border-radius:10px; padding:10px 14px; font-size:.78rem; color:var(--tg); }
+
+/* APP */
+#app { display:none; }
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50; box-shadow:var(--shadow); }
+.topbar-logo { font-family:'Instrument Serif',serif; font-size:1.4rem; }
+.topbar-logo span { color:var(--accent); font-style:italic; }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.avatar { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.78rem; flex-shrink:0; }
+.theme-btn { width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .2s; }
+.theme-btn:hover { background:var(--border); }
+.status-pill { display:flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:.73rem; font-weight:600; }
+.status-pill.online { background:var(--accent-dim); color:var(--accent); }
+.status-pill.offline { background:var(--surface2); color:var(--muted); }
+.status-pill::before { content:'●'; font-size:.55rem; }
+.logout-btn { background:none; border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:8px; font-family:'Outfit',sans-serif; font-size:.76rem; cursor:pointer; transition:all .2s; font-weight:500; }
+.logout-btn:hover { border-color:var(--danger); color:var(--danger); }
+
+/* NAV */
+.nav { display:flex; gap:2px; padding:16px 24px 0; background:var(--surface); border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none; }
+.nav::-webkit-scrollbar { display:none; }
+.nav-tab { padding:9px 18px; border-radius:8px 8px 0 0; font-size:.82rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all .2s; white-space:nowrap; border:1px solid transparent; border-bottom:none; position:relative; bottom:-1px; }
+.nav-tab.active { background:var(--bg); border-color:var(--border); color:var(--text); }
+.nav-tab:not(.active):hover { color:var(--text); }
+
+/* CONTENT */
+.content { padding:24px; max-width:1100px; margin:0 auto; }
+.panel { display:none; }
+.panel.active { display:block; animation:fadeUp .2s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* CARDS */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px 24px; box-shadow:var(--shadow); margin-bottom:18px; }
+.card-title { font-size:.7rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+.stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
+.stat-box { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; }
+.stat-num { font-family:'DM Mono',monospace; font-size:1.9rem; font-weight:500; line-height:1; margin-bottom:4px; }
+.stat-lbl { font-size:.73rem; color:var(--muted); font-weight:500; }
+
+/* CLOCK */
+.clock-hero { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+.clock-num { font-family:'DM Mono',monospace; font-size:3rem; font-weight:500; color:var(--accent); letter-spacing:-1px; }
+.clock-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.btn-in { padding:10px 22px; background:var(--accent); color:#fff; border:none; border-radius:10px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:all .2s; }
+.btn-in:hover { opacity:.85; transform:translateY(-1px); }
+.btn-in:disabled { opacity:.35; cursor:default; transform:none; }
+.btn-out { padding:10px 22px; background:var(--accent3-dim); color:var(--accent3); border:1.5px solid var(--accent3); border-radius:10px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:all .2s; }
+.btn-out:hover { opacity:.85; }
+.btn-out:disabled { opacity:.35; cursor:default; }
+.session-row { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--surface2); border-radius:9px; margin-bottom:7px; font-size:.84rem; }
+.session-t { font-family:'DM Mono',monospace; color:var(--accent2); }
+.session-d { font-family:'DM Mono',monospace; color:var(--accent); font-weight:600; }
+
+/* TODOS */
+.todo-item { display:flex; align-items:center; gap:10px; padding:10px 13px; border-radius:9px; border:1.5px solid var(--border); margin-bottom:7px; transition:border-color .15s; background:var(--surface); }
+.todo-item:hover { border-color:var(--accent); }
+.todo-item.done { opacity:.5; }
+.todo-item.done .todo-label { text-decoration:line-through; color:var(--muted); }
+.chk { width:20px; height:20px; border-radius:6px; border:2px solid var(--border); background:transparent; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; font-size:.7rem; cursor:pointer; }
+.chk.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+.todo-label { flex:1; font-size:.87rem; cursor:pointer; }
+.pri-tag { font-size:.68rem; font-weight:600; padding:2px 8px; border-radius:4px; }
+.ph { background:rgba(248,113,113,.15); color:var(--danger); }
+.pm { background:var(--accent3-dim); color:var(--accent3); }
+.pl { background:var(--accent-dim); color:var(--accent); }
+.del-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.85rem; padding:2px 5px; border-radius:4px; }
+.del-btn:hover { color:var(--danger); }
+.add-row { display:flex; gap:8px; margin-bottom:14px; }
+.add-inp { flex:1; padding:10px 13px; background:var(--surface2); border:1.5px solid var(--border); border-radius:9px; color:var(--text); font-family:'Outfit',sans-serif; font-size:.87rem; transition:border-color .2s; }
+.add-inp:focus { outline:none; border-color:var(--accent); }
+.add-inp::placeholder { color:var(--muted); }
+.pri-sel { padding:9px 10px; background:var(--surface2); border:1.5px solid var(--border); border-radius:9px; color:var(--text); font-family:'Outfit',sans-serif; font-size:.82rem; cursor:pointer; }
+.add-btn { padding:10px 16px; background:var(--accent); color:#fff; border:none; border-radius:9px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .2s; }
+.add-btn:hover { opacity:.85; }
+
+/* DAILY */
+.daily-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:9px; background:var(--surface2); margin-bottom:7px; cursor:pointer; transition:all .15s; border:1.5px solid transparent; }
+.daily-item:hover { border-color:var(--border); }
+.daily-item.done { opacity:.55; }
+.daily-item.done .daily-lbl { text-decoration:line-through; color:var(--muted); }
+.dchk { width:22px; height:22px; border-radius:6px; border:2px solid var(--border); background:transparent; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.75rem; transition:all .15s; }
+.dchk.on { background:var(--accent2); border-color:var(--accent2); color:#fff; }
+.daily-lbl { flex:1; font-size:.87rem; }
+.prog-wrap { background:var(--surface2); border-radius:20px; height:6px; overflow:hidden; margin-bottom:16px; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent)); border-radius:20px; transition:width .4s ease; }
+.prog-lbl { display:flex; justify-content:space-between; font-size:.73rem; color:var(--muted); margin-bottom:5px; }
+
+/* MANAGER */
+.team-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+.member-card { background:var(--surface); border:1.5px solid var(--border); border-radius:15px; padding:18px; box-shadow:var(--shadow); transition:all .2s; }
+.member-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+.mc-head { display:flex; align-items:center; gap:11px; margin-bottom:14px; }
+.mc-name { font-weight:600; font-size:.92rem; }
+.mc-team { color:var(--muted); font-size:.74rem; }
+.mc-stats { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:12px; }
+.mc-stat { background:var(--surface2); border-radius:8px; padding:9px 11px; }
+.mc-stat .sl { font-size:.66rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:2px; }
+.mc-stat .sv { font-family:'DM Mono',monospace; font-size:.93rem; font-weight:500; }
+.tp-row { display:flex; align-items:center; gap:7px; padding:4px 0; color:var(--muted); font-size:.77rem; border-bottom:1px solid var(--border); }
+.tp-row:last-child { border-bottom:none; }
+.tp-row.done { text-decoration:line-through; opacity:.5; }
+.tp-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+
+/* TABLE */
+.time-tbl { width:100%; border-collapse:collapse; font-size:.83rem; }
+.time-tbl th { text-align:left; padding:10px 14px; color:var(--muted); font-size:.68rem; letter-spacing:1.5px; text-transform:uppercase; border-bottom:1.5px solid var(--border); font-weight:600; }
+.time-tbl td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.time-tbl tr:last-child td { border-bottom:none; }
+.time-tbl tr:hover td { background:var(--surface2); }
+.mono { font-family:'DM Mono',monospace; color:var(--accent2); }
+.dur { font-family:'DM Mono',monospace; color:var(--accent); font-weight:600; }
+
+/* MISC */
+.private-tag { display:inline-flex; align-items:center; gap:5px; background:rgba(42,171,238,.1); color:var(--tg); border:1px solid rgba(42,171,238,.25); border-radius:7px; padding:4px 10px; font-size:.73rem; font-weight:600; margin-bottom:16px; }
+.mli { display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--surface2); border-radius:10px; margin-bottom:8px; border:1.5px solid transparent; transition:all .2s; }
+.mli:hover { border-color:var(--border); }
+.mli-info { flex:1; }
+.mli-name { font-weight:600; font-size:.88rem; }
+.mli-team { color:var(--muted); font-size:.75rem; }
+.mli-pin { font-family:'DM Mono',monospace; color:var(--muted); font-size:.78rem; }
+.mli-del { background:none; border:none; color:var(--muted); cursor:pointer; padding:5px 8px; border-radius:6px; transition:all .15s; font-size:.9rem; }
+.mli-del:hover { background:rgba(248,113,113,.1); color:var(--danger); }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:300; display:flex; align-items:center; justify-content:center; padding:20px; }
+.modal { background:var(--surface); border-radius:18px; padding:28px; width:100%; max-width:400px; box-shadow:var(--shadow-lg); animation:fadeUp .2s ease; }
+.modal h3 { font-size:1.05rem; font-weight:700; margin-bottom:20px; }
+.modal-btns { display:flex; gap:8px; margin-top:16px; }
+.modal-cancel { flex:1; padding:11px; background:var(--surface2); border:1.5px solid var(--border); border-radius:9px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.87rem; cursor:pointer; color:var(--text); }
+.modal-ok { flex:1; padding:11px; background:var(--accent); color:#fff; border:none; border-radius:9px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.87rem; cursor:pointer; }
+.pdf-btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; background:var(--accent2-dim); color:var(--accent2); border:1.5px solid var(--accent2); border-radius:9px; font-family:'Outfit',sans-serif; font-weight:600; font-size:.83rem; cursor:pointer; transition:all .2s; }
+.pdf-btn:hover { background:var(--accent2); color:#fff; }
+.tg-panel { background:rgba(42,171,238,.06); border:1px solid rgba(42,171,238,.2); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
+.tg-panel h3 { color:var(--tg); font-size:.93rem; font-weight:700; margin-bottom:8px; }
+.tg-panel p { color:var(--muted); font-size:.82rem; line-height:1.6; }
+.tg-cmds { margin-top:12px; display:flex; flex-direction:column; gap:5px; }
+.tg-cmd { display:flex; align-items:center; gap:10px; background:var(--surface); border-radius:8px; padding:8px 12px; font-size:.81rem; border:1px solid var(--border); }
+.tg-cmd code { font-family:'DM Mono',monospace; color:var(--tg); font-weight:500; font-size:.85rem; }
+
+/* TEAM BADGE */
+.team-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:.72rem; font-weight:600; }
+
+@media (max-width:600px) {
+  .content { padding:14px; }
+  .topbar { padding:10px 14px; }
+  .clock-num { font-size:2.2rem; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div id="onboarding">
+  <div class="ob-card">
+    <div class="ob-logo">TeamFlow <span>Scale</span></div>
+    <div class="ob-dots">
+      <div class="ob-dot active" id="dot0"></div>
+      <div class="ob-dot" id="dot1"></div>
+      <div class="ob-dot" id="dot2"></div>
+    </div>
+    <div class="ob-step active" id="ob0">
+      <div class="ob-icon">⚡</div>
+      <div class="ob-title">Track Your Team's Time</div>
+      <div class="ob-desc">Clock in and out, manage tasks, and track daily routines. Each team member sees only their own data — completely private.</div>
+      <button class="ob-btn" onclick="obNext()">Get Started →</button>
+      <button class="ob-btn secondary" onclick="skipOnboarding()">I've been here before</button>
+    </div>
+    <div class="ob-step" id="ob1">
+      <div class="ob-icon">🤖</div>
+      <div class="ob-title">Telegram Bot Included</div>
+      <div class="ob-desc">Your team can clock in/out directly from Telegram using <strong>@teamflow_scale_bot</strong> — no app needed.</div>
+      <button class="ob-btn" onclick="obNext()">Next →</button>
+    </div>
+    <div class="ob-step" id="ob2">
+      <div class="ob-icon">📊</div>
+      <div class="ob-title">Manager Dashboard</div>
+      <div class="ob-desc">See all teams at a glance, export PDF reports and manage members — from the manager view.</div>
+      <button class="ob-btn" onclick="skipOnboarding()">Start Using TeamFlow →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>TeamFlow <span>Scale</span></h1>
+      <p>Task & time tracking for teams</p>
+    </div>
+    <label class="field-label">Select your team</label>
+    <select class="inp" id="memberSelect" style="cursor:pointer"></select>
+    <label class="field-label">PIN (4 digits)</label>
+    <input class="inp" type="password" id="pinInput" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter')loginMember()">
+    <button class="btn-primary" onclick="loginMember()">Sign In →</button>
+    <div class="divider">or</div>
+    <button class="btn-manager" onclick="showManagerLogin()">🔐 Manager / Admin</button>
+    <div class="tg-hint">
+      <span>🤖</span>
+      <span>Also on Telegram: <strong>@teamflow_scale_bot</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGER MODAL -->
+<div id="managerModal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h3>🔐 Admin Login</h3>
+    <label class="field-label">Admin PIN</label>
+    <input class="inp" type="password" id="adminPin" maxlength="6" placeholder="Admin PIN" onkeydown="if(event.key==='Enter')loginManager()">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="document.getElementById('managerModal').style.display='none'">Cancel</button>
+      <button class="modal-ok" onclick="loginManager()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MEMBER MODAL -->
+<div id="addMemberModal" class="modal-overlay" style="display:none">
+  <div class="modal">
+    <h3>➕ Add Team Member</h3>
+    <label class="field-label">Full Name</label>
+    <input class="inp" id="newName" placeholder="e.g. Ana Kovač" style="width:100%;margin-bottom:10px">
+    <label class="field-label">Team</label>
+    <select class="inp" id="newTeam" style="cursor:pointer;margin-bottom:10px">
+      <option value="Marketing Team">Marketing Team</option>
+      <option value="Safe Offers Team">Safe Offers Team</option>
+      <option value="ReSell Team">ReSell Team</option>
+      <option value="New Sales Team">New Sales Team</option>
+      <option value="Warehouse Team">Warehouse Team</option>
+    </select>
+    <label class="field-label">PIN (4 digits)</label>
+    <input class="inp" id="newPin" type="password" maxlength="4" placeholder="••••" style="width:100%;margin-bottom:10px">
+    <label class="field-label">Telegram Username (without @)</label>
+    <input class="inp" id="newTg" placeholder="e.g. ana_kovac" style="width:100%">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="document.getElementById('addMemberModal').style.display='none'">Cancel</button>
+      <button class="modal-ok" onclick="addMember()">Add Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">TeamFlow <span>Scale</span></div>
+    <div class="topbar-right">
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <div class="status-pill offline" id="statusPill">Offline</div>
+      <div class="avatar" id="topAvatar"></div>
+      <div>
+        <div style="font-size:.85rem;font-weight:600" id="topName">—</div>
+        <div style="font-size:.72rem;color:var(--muted)" id="topTeam">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <div class="nav" id="navBar"></div>
+  <div class="content">
+
+    <!-- CLOCK -->
+    <div class="panel" id="panel-clock">
+      <div class="card">
+        <div class="clock-hero">
+          <div>
+            <div style="font-size:1rem;font-weight:600;margin-bottom:4px">Working Hours</div>
+            <div style="color:var(--muted);font-size:.83rem" id="clockMsg">Not clocked in</div>
+          </div>
+          <div class="clock-num" id="clockNum">00:00:00</div>
+          <div class="clock-actions">
+            <button class="btn-in" id="btnIn" onclick="clockIn()">▶ Clock In</button>
+            <button class="btn-out" id="btnOut" onclick="clockOut()" disabled>■ Clock Out</button>
+          </div>
+        </div>
+      </div>
+      <div class="tg-panel">
+        <h3>🤖 Use Telegram Bot</h3>
+        <p>Find <strong>@teamflow_scale_bot</strong> on Telegram for quick clock in/out:</p>
+        <div class="tg-cmds">
+          <div class="tg-cmd"><code>/clockin</code><span>→ Clock in</span></div>
+          <div class="tg-cmd"><code>/clockout</code><span>→ Clock out</span></div>
+          <div class="tg-cmd"><code>/status</code><span>→ Your status</span></div>
+          <div class="tg-cmd"><code>/tasks</code><span>→ Your tasks</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Today's Sessions</div>
+        <div id="sessionList"><p style="color:var(--muted);font-size:.84rem">No sessions yet today.</p></div>
+        <div style="display:flex;gap:24px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+          <div><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px">Today</div><div class="dur" style="font-size:1.3rem" id="todayTotal">0h 0m</div></div>
+          <div><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px">All Sessions</div><div class="mono" style="font-size:1.3rem" id="allSessions">0</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="panel" id="panel-tasks">
+      <div class="private-tag">🔒 Private — visible only to you</div>
+      <div class="card">
+        <div class="card-title">My Tasks</div>
+        <div class="add-row">
+          <input class="add-inp" id="todoIn" placeholder="New task..." onkeydown="if(event.key==='Enter')addTodo()">
+          <select class="pri-sel" id="priSel">
+            <option value="h">🔴 High</option>
+            <option value="m" selected>🟡 Medium</option>
+            <option value="l">🟢 Low</option>
+          </select>
+          <button class="add-btn" onclick="addTodo()">+</button>
+        </div>
+        <div id="todoList"></div>
+      </div>
+    </div>
+
+    <!-- DAILY -->
+    <div class="panel" id="panel-daily">
+      <div class="private-tag">🔒 Private — visible only to you</div>
+      <div class="card">
+        <div class="card-title">Daily Routines — <span id="dailyDate" style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.82rem"></span></div>
+        <div class="prog-lbl"><span>Today's Progress</span><span id="progLbl">0 / 0</span></div>
+        <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        <div class="add-row" style="margin-bottom:14px">
+          <input class="add-inp" id="dailyIn" placeholder="Add routine..." onkeydown="if(event.key==='Enter')addDaily()">
+          <button class="add-btn" onclick="addDaily()">+</button>
+        </div>
+        <div id="dailyList"></div>
+      </div>
+    </div>
+
+    <!-- TEAM (MANAGER) -->
+    <div class="panel" id="panel-team">
+      <div class="stats-row" id="mgrStats"></div>
+      <div class="card-title" style="margin-bottom:12px">All Teams — Live Status</div>
+      <div class="team-grid" id="teamGrid"></div>
+    </div>
+
+    <!-- TIME LOG (MANAGER) -->
+    <div class="panel" id="panel-timelog">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div class="card-title" style="margin-bottom:0">Time Log</div>
+        <button class="pdf-btn" onclick="exportPDF()">📄 Export PDF Report</button>
+      </div>
+      <div class="card" style="overflow-x:auto">
+        <table class="time-tbl">
+          <thead><tr><th>Member</th><th>Team</th><th>Date</th><th>Start</th><th>End</th><th>Duration</th></tr></thead>
+          <tbody id="timeTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STATS (MANAGER) -->
+    <div class="panel" id="panel-stats">
+      <div class="stats-row" id="globalStats"></div>
+      <div class="card-title" style="margin-bottom:12px">Productivity by Member</div>
+      <div id="memberStatsRows"></div>
+    </div>
+
+    <!-- SETTINGS (MANAGER) -->
+    <div class="panel" id="panel-settings">
+      <div class="card">
+        <div class="card-title">Team Management</div>
+        <button class="add-btn" style="margin-bottom:16px" onclick="document.getElementById('addMemberModal').style.display='flex'">+ Add Member</button>
+        <div id="memberMgmtList"></div>
+      </div>
+      <div class="tg-panel">
+        <h3>🤖 Telegram Bot — @teamflow_scale_bot</h3>
+        <p>Share with your team. Each member:</p>
+        <div class="tg-cmds" style="margin-top:10px">
+          <div class="tg-cmd"><span style="font-weight:700;color:var(--tg)">1.</span><span>Find <strong>@teamflow_scale_bot</strong> on Telegram</span></div>
+          <div class="tg-cmd"><span style="font-weight:700;color:var(--tg)">2.</span><span>Press <strong>START</strong></span></div>
+          <div class="tg-cmd"><span style="font-weight:700;color:var(--tg)">3.</span><span>Type <code style="color:var(--tg)">/register First Last</code></span></div>
+          <div class="tg-cmd"><span style="font-weight:700;color:var(--tg)">4.</span><span>Type <code style="color:var(--tg)">/lang</code> to choose EN or HR</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const TEAM_COLORS = {
+  'Marketing Team': '#4ade80',
+  'Safe Offers Team': '#818cf8',
+  'ReSell Team': '#fb923c',
+  'New Sales Team': '#f472b6',
+  'Warehouse Team': '#60a5fa'
+};
+const ADMIN_PIN = '1234';
+const DEFAULT_MEMBERS = [
+  {id:'m1', name:'Member 1', team:'Marketing Team',   pin:'1111', tg:'', color:'#4ade80'},
+  {id:'m2', name:'Member 2', team:'Safe Offers Team', pin:'2222', tg:'', color:'#818cf8'},
+  {id:'m3', name:'Member 3', team:'ReSell Team',      pin:'3333', tg:'', color:'#fb923c'},
+  {id:'m4', name:'Member 4', team:'New Sales Team',   pin:'4444', tg:'', color:'#f472b6'},
+  {id:'m5', name:'Member 5', team:'Warehouse Team',   pin:'5555', tg:'', color:'#60a5fa'},
+];
+
+let TEAM = JSON.parse(localStorage.getItem('tf_members') || JSON.stringify(DEFAULT_MEMBERS));
+let STATE = JSON.parse(localStorage.getItem('tf_state') || '{}');
+let currentUser = null, isManager = false, clockInterval = null, obStep = 0;
+
+function saveState() { localStorage.setItem('tf_state', JSON.stringify(STATE)); }
+function saveTeam() { localStorage.setItem('tf_members', JSON.stringify(TEAM)); }
+function getU(id) {
+  if (!STATE[id]) STATE[id] = {sessions:[],todos:[],daily:[],clockedIn:false,clockStart:null};
+  return STATE[id];
+}
+function today() { return new Date().toISOString().slice(0,10); }
+function fmtMs(ms) { const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60; return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`; }
+function fmtDur(ms) { const m=Math.floor(ms/60000); return `${Math.floor(m/60)}h ${m%60}m`; }
+function fmtTime(ts) { if(!ts)return'—'; const d=new Date(ts); return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+function initials(n) { return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function teamColor(team) { return TEAM_COLORS[team] || '#6b7494'; }
+
+// THEME
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('tf_theme', isDark ? 'light' : 'dark');
+}
+function initTheme() {
+  const saved = localStorage.getItem('tf_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+}
+
+// ONBOARDING
+function obNext() {
+  document.getElementById(`ob${obStep}`).classList.remove('active');
+  document.getElementById(`dot${obStep}`).classList.remove('active');
+  obStep++;
+  document.getElementById(`ob${obStep}`).classList.add('active');
+  document.getElementById(`dot${obStep}`).classList.add('active');
+}
+function skipOnboarding() {
+  localStorage.setItem('tf_ob_done','1');
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+// LOGIN
+window.onload = function() {
+  initTheme();
+  if (localStorage.getItem('tf_ob_done')) {
+    document.getElementById('onboarding').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+  }
+  rebuildSelect();
+};
+
+function rebuildSelect() {
+  const sel = document.getElementById('memberSelect');
+  sel.innerHTML = '<option value="">— Select your team —</option>';
+  // Group by team - member only sees team name, not other members
+  const teams = [...new Set(TEAM.map(m => m.team))];
+  teams.forEach(team => {
+    const members = TEAM.filter(m => m.team === team);
+    members.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m.id;
+      o.textContent = m.team; // Only shows team name, not member name
+      sel.appendChild(o);
+    });
+  });
+}
+
+function loginMember() {
+  const id = document.getElementById('memberSelect').value;
+  const pin = document.getElementById('pinInput').value;
+  if (!id) { alert('Select your team'); return; }
+  const member = TEAM.find(m => m.id === id);
+  if (!member || pin !== member.pin) { alert('Wrong PIN'); return; }
+  currentUser = member; isManager = false;
+  startApp();
+}
+function showManagerLogin() { document.getElementById('managerModal').style.display='flex'; }
+function loginManager() {
+  const pin = document.getElementById('adminPin').value;
+  if (pin !== ADMIN_PIN) { alert('Wrong admin PIN'); return; }
+  currentUser = {id:'manager', name:'Manager', team:'Administrator', color:'#6b7494'};
+  isManager = true;
+  document.getElementById('managerModal').style.display='none';
+  startApp();
+}
+function logout() {
+  if (clockInterval) { clearInterval(clockInterval); clockInterval=null; }
+  currentUser=null; isManager=false;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('pinInput').value='';
+  document.getElementById('adminPin').value='';
+}
+
+function startApp() {
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  const av = document.getElementById('topAvatar');
+  const color = teamColor(currentUser.team);
+  av.textContent = initials(currentUser.name);
+  av.style.cssText = `background:${color}20;color:${color};border:1.5px solid ${color}44;`;
+  document.getElementById('topName').textContent = currentUser.team;
+  document.getElementById('topTeam').textContent = isManager ? 'Administrator' : currentUser.name;
+  buildNav();
+  if (!isManager) {
+    activateTab('clock'); resumeClock(); renderSessions(); renderTodos(); renderDaily();
+  } else {
+    activateTab('team'); renderTeam(); renderTimeLog(); renderStats(); renderSettings();
+  }
+}
+
+// NAV
+const MEMBER_TABS = [{id:'clock',label:'⏱ Time'},{id:'tasks',label:'✅ Tasks'},{id:'daily',label:'📋 Daily'}];
+const MGR_TABS = [{id:'team',label:'👥 Teams'},{id:'timelog',label:'⏱ Time Log'},{id:'stats',label:'📊 Stats'},{id:'settings',label:'⚙️ Settings'}];
+
+function buildNav() {
+  const bar = document.getElementById('navBar'); bar.innerHTML='';
+  (isManager?MGR_TABS:MEMBER_TABS).forEach(t=>{
+    const el=document.createElement('div');
+    el.className='nav-tab'; el.id='tab-'+t.id; el.textContent=t.label;
+    el.onclick=()=>activateTab(t.id); bar.appendChild(el);
+  });
+}
+function activateTab(id) {
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id)?.classList.add('active');
+  document.getElementById('panel-'+id)?.classList.add('active');
+}
+
+// CLOCK
+function resumeClock() {
+  const u=getU(currentUser.id);
+  if (u.clockedIn&&u.clockStart) {
+    document.getElementById('btnIn').disabled=true;
+    document.getElementById('btnOut').disabled=false;
+    document.getElementById('statusPill').className='status-pill online';
+    document.getElementById('statusPill').textContent='Online';
+    document.getElementById('clockMsg').textContent='Clocked in since '+fmtTime(u.clockStart);
+    clockInterval=setInterval(()=>{updateClockNum();renderSessions();},1000);
+    updateClockNum();
+  }
+}
+function updateClockNum() {
+  const u=getU(currentUser.id);
+  if (!u.clockStart) return;
+  document.getElementById('clockNum').textContent=fmtMs(Date.now()-u.clockStart);
+}
+function clockIn() {
+  const u=getU(currentUser.id); u.clockedIn=true; u.clockStart=Date.now(); saveState();
+  document.getElementById('btnIn').disabled=true;
+  document.getElementById('btnOut').disabled=false;
+  document.getElementById('statusPill').className='status-pill online';
+  document.getElementById('statusPill').textContent='Online';
+  document.getElementById('clockMsg').textContent='Clocked in since '+fmtTime(u.clockStart);
+  clockInterval=setInterval(()=>{updateClockNum();renderSessions();},1000);
+}
+function clockOut() {
+  const u=getU(currentUser.id);
+  const end=Date.now(), dur=end-u.clockStart;
+  u.sessions.push({date:today(),start:u.clockStart,end,dur});
+  u.clockedIn=false; u.clockStart=null; saveState();
+  clearInterval(clockInterval); clockInterval=null;
+  document.getElementById('clockNum').textContent='00:00:00';
+  document.getElementById('btnIn').disabled=false;
+  document.getElementById('btnOut').disabled=true;
+  document.getElementById('statusPill').className='status-pill offline';
+  document.getElementById('statusPill').textContent='Offline';
+  document.getElementById('clockMsg').textContent='Clocked out. Duration: '+fmtDur(dur);
+  renderSessions();
+}
+function renderSessions() {
+  const u=getU(currentUser.id);
+  const ts=u.sessions.filter(s=>s.date===today());
+  const list=document.getElementById('sessionList');
+  list.innerHTML=ts.length?ts.map(s=>`
+    <div class="session-row">
+      <span style="color:var(--muted);font-size:.76rem">${s.date}</span>
+      <span class="session-t">${fmtTime(s.start)} → ${fmtTime(s.end)}</span>
+      <span class="session-d">${fmtDur(s.dur)}</span>
+    </div>`).join(''):'<p style="color:var(--muted);font-size:.84rem">No sessions yet today.</p>';
+  const todayMs=ts.reduce((a,s)=>a+s.dur,0)+(u.clockedIn&&u.clockStart?Date.now()-u.clockStart:0);
+  document.getElementById('todayTotal').textContent=fmtDur(todayMs);
+  document.getElementById('allSessions').textContent=u.sessions.length;
+}
+
+// TODOS
+function addTodo() {
+  const inp=document.getElementById('todoIn'),pri=document.getElementById('priSel').value;
+  const text=inp.value.trim(); if(!text)return;
+  getU(currentUser.id).todos.push({id:Date.now(),text,pri,done:false});
+  saveState(); inp.value=''; renderTodos();
+}
+function toggleTodo(id) { const t=getU(currentUser.id).todos.find(t=>t.id===id); if(t){t.done=!t.done;saveState();renderTodos();} }
+function deleteTodo(id) { const u=getU(currentUser.id); u.todos=u.todos.filter(t=>t.id!==id); saveState(); renderTodos(); }
+function renderTodos() {
+  const u=getU(currentUser.id);
+  const cont=document.getElementById('todoList');
+  if(!u.todos.length){cont.innerHTML='<p style="color:var(--muted);font-size:.84rem;padding:6px 0">No tasks yet. Add your first!</p>';return;}
+  const pl={h:'High',m:'Medium',l:'Low'},pc={h:'ph',m:'pm',l:'pl'};
+  cont.innerHTML=u.todos.map(t=>`
+    <div class="todo-item ${t.done?'done':''}">
+      <div class="chk ${t.done?'on':''}" onclick="toggleTodo(${t.id})">${t.done?'✓':''}</div>
+      <span class="todo-label" onclick="toggleTodo(${t.id})">${t.text}</span>
+      <span class="pri-tag ${pc[t.pri]}">${pl[t.pri]}</span>
+      <button class="del-btn" onclick="deleteTodo(${t.id})">✕</button>
+    </div>`).join('');
+}
+
+// DAILY
+function addDaily() {
+  const inp=document.getElementById('dailyIn'),text=inp.value.trim(); if(!text)return;
+  getU(currentUser.id).daily.push({id:Date.now(),text,doneDate:null});
+  saveState(); inp.value=''; renderDaily();
+}
+function toggleDaily(id) {
+  const d=getU(currentUser.id).daily.find(d=>d.id===id);
+  if(d){d.doneDate=d.doneDate===today()?null:today();saveState();renderDaily();}
+}
+function renderDaily() {
+  const u=getU(currentUser.id),t=today();
+  document.getElementById('dailyDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});
+  const done=u.daily.filter(d=>d.doneDate===t).length,total=u.daily.length;
+  document.getElementById('progLbl').textContent=`${done} / ${total}`;
+  document.getElementById('progFill').style.width=total?(done/total*100)+'%':'0%';
+  const cont=document.getElementById('dailyList');
+  if(!u.daily.length){cont.innerHTML='<p style="color:var(--muted);font-size:.84rem">Add your daily routines!</p>';return;}
+  cont.innerHTML=u.daily.map(d=>{
+    const isDone=d.doneDate===t;
+    return `<div class="daily-item ${isDone?'done':''}" onclick="toggleDaily(${d.id})">
+      <div class="dchk ${isDone?'on':''}">${isDone?'✓':''}</div>
+      <span class="daily-lbl">${d.text}</span>
+    </div>`;
+  }).join('');
+}
+
+// MANAGER - TEAM
+function renderTeam() {
+  const t=today();
+  const online=TEAM.filter(m=>getU(m.id).clockedIn).length;
+  const totalT=TEAM.reduce((a,m)=>a+getU(m.id).todos.length,0);
+  const doneT=TEAM.reduce((a,m)=>a+getU(m.id).todos.filter(x=>x.done).length,0);
+  const dailyDone=TEAM.reduce((a,m)=>a+getU(m.id).daily.filter(d=>d.doneDate===t).length,0);
+  document.getElementById('mgrStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent)">${online}</div><div class="stat-lbl">Online Now</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent2)">${TEAM.length}</div><div class="stat-lbl">Members</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent3)">${doneT}/${totalT}</div><div class="stat-lbl">Tasks Done</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent)">${dailyDone}</div><div class="stat-lbl">Routines Today</div></div>
+  `;
+  document.getElementById('teamGrid').innerHTML=TEAM.map(m=>{
+    const u=getU(m.id),isOn=u.clockedIn;
+    const color=teamColor(m.team);
+    const todayMs=u.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.dur,0)+(isOn&&u.clockStart?Date.now()-u.clockStart:0);
+    const dT=u.todos.filter(x=>x.done).length,aT=u.todos.length;
+    const top=u.todos.slice(0,3);
+    return `<div class="member-card">
+      <div class="mc-head">
+        <div class="avatar" style="width:38px;height:38px;font-size:.82rem;background:${color}20;color:${color};border:1.5px solid ${color}44">${initials(m.name)}</div>
+        <div>
+          <div class="mc-name">${m.name}</div>
+          <div class="mc-team">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:4px"></span>
+            ${m.team}
+          </div>
+        </div>
+        <div style="margin-left:auto;font-size:.72rem;font-weight:600;color:${isOn?'var(--accent)':'var(--muted)'}">
+          <span style="font-size:.55rem">●</span> ${isOn?'Online':'Offline'}
+        </div>
+      </div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="sl">Today</div><div class="sv" style="color:var(--accent)">${fmtDur(todayMs)}</div></div>
+        <div class="mc-stat"><div class="sl">Tasks</div><div class="sv" style="color:var(--accent2)">${dT}/${aT}</div></div>
+        <div class="mc-stat"><div class="sl">Sessions</div><div class="sv" style="color:var(--accent3)">${u.sessions.filter(s=>s.date===t).length+(isOn?1:0)}</div></div>
+        <div class="mc-stat"><div class="sl">Routines</div><div class="sv" style="color:var(--accent)">${u.daily.filter(d=>d.doneDate===t).length}/${u.daily.length}</div></div>
+      </div>
+      ${top.length?`<div>${top.map(tt=>`<div class="tp-row ${tt.done?'done':''}"><div class="tp-dot" style="background:${tt.done?'var(--accent)':'var(--border)'}"></div>${tt.text}</div>`).join('')}${aT>3?`<div style="color:var(--muted);font-size:.71rem;padding:4px 0">+${aT-3} more</div>`:''}</div>`:'<div style="color:var(--muted);font-size:.77rem">No tasks</div>'}
+    </div>`;
+  }).join('');
+}
+
+// MANAGER - TIME LOG
+function renderTimeLog() {
+  const rows=[];
+  TEAM.forEach(m=>{
+    const u=getU(m.id);
+    u.sessions.forEach(s=>rows.push({m,...s}));
+    if(u.clockedIn&&u.clockStart) rows.push({m,date:today(),start:u.clockStart,end:null,dur:Date.now()-u.clockStart,live:true});
+  });
+  rows.sort((a,b)=>b.start-a.start);
+  const color = m => teamColor(m.team);
+  document.getElementById('timeTbody').innerHTML=rows.length?rows.map(r=>`
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="avatar" style="width:26px;height:26px;font-size:.66rem;background:${color(r.m)}20;color:${color(r.m)};border:1px solid ${color(r.m)}33">${initials(r.m.name)}</div>${r.m.name}
+      </div></td>
+      <td><span style="font-size:.75rem;font-weight:600;color:${color(r.m)}">${r.m.team}</span></td>
+      <td style="color:var(--muted)">${r.date}</td>
+      <td class="mono">${fmtTime(r.start)}</td>
+      <td>${r.live?'<span style="color:var(--accent);font-size:.76rem;font-weight:600">● Active</span>':`<span class="mono">${fmtTime(r.end)}</span>`}</td>
+      <td class="dur">${fmtDur(r.dur)}</td>
+    </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No sessions recorded.</td></tr>';
+}
+
+// MANAGER - STATS
+function renderStats() {
+  const t=today();
+  const totalMs=TEAM.reduce((a,m)=>{const u=getU(m.id);return a+u.sessions.reduce((b,s)=>b+s.dur,0)+(u.clockedIn&&u.clockStart?Date.now()-u.clockStart:0);},0);
+  const doneT=TEAM.reduce((a,m)=>a+getU(m.id).todos.filter(x=>x.done).length,0);
+  const totalT=TEAM.reduce((a,m)=>a+getU(m.id).todos.length,0);
+  document.getElementById('globalStats').innerHTML=`
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent)">${fmtDur(totalMs)}</div><div class="stat-lbl">Total Hours</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent2)">${doneT}</div><div class="stat-lbl">Tasks Completed</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent3)">${totalT-doneT}</div><div class="stat-lbl">Tasks In Progress</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--accent)">${totalT>0?Math.round(doneT/totalT*100):0}%</div><div class="stat-lbl">Completion Rate</div></div>
+  `;
+  document.getElementById('memberStatsRows').innerHTML=TEAM.map(m=>{
+    const u=getU(m.id),color=teamColor(m.team);
+    const ms=u.sessions.reduce((a,s)=>a+s.dur,0)+(u.clockedIn&&u.clockStart?Date.now()-u.clockStart:0);
+    const done=u.todos.filter(x=>x.done).length,total=u.todos.length;
+    const pct=total>0?Math.round(done/total*100):0;
+    return `<div class="card" style="padding:16px 20px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div class="avatar" style="width:38px;height:38px;background:${color}20;color:${color};border:1.5px solid ${color}33;flex-shrink:0">${initials(m.name)}</div>
+        <div style="flex:1;min-width:120px">
+          <div style="font-weight:600">${m.name}</div>
+          <div style="font-size:.74rem;color:${color};font-weight:600">${m.team}</div>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Hours</div><div class="dur">${fmtDur(ms)}</div></div>
+          <div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Tasks</div><div class="mono">${done}/${total}</div></div>
+          <div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Rate</div><div style="font-family:'DM Mono',monospace;color:var(--accent3);font-weight:500">${pct}%</div></div>
+          <div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)">Routines</div><div style="font-family:'DM Mono',monospace;color:var(--accent2);font-weight:500">${u.daily.filter(d=>d.doneDate===t).length}/${u.daily.length}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// SETTINGS
+function renderSettings() {
+  document.getElementById('memberMgmtList').innerHTML=TEAM.map(m=>{
+    const color=teamColor(m.team);
+    return `<div class="mli">
+      <div class="avatar" style="width:36px;height:36px;background:${color}20;color:${color};border:1.5px solid ${color}33;flex-shrink:0">${initials(m.name)}</div>
+      <div class="mli-info"><div class="mli-name">${m.name}</div><div class="mli-team" style="color:${color}">${m.team}${m.tg?' · @'+m.tg:''}</div></div>
+      <span class="mli-pin">PIN: ${m.pin}</span>
+      <button class="mli-del" onclick="deleteMember('${m.id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function addMember() {
+  const name=document.getElementById('newName').value.trim();
+  const team=document.getElementById('newTeam').value;
+  const pin=document.getElementById('newPin').value.trim();
+  const tg=document.getElementById('newTg').value.trim();
+  if(!name||!team||pin.length!==4){alert('Fill all fields. PIN must be 4 digits.');return;}
+  const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();
+  TEAM.push({id,name,team,pin,tg,color:teamColor(team)});
+  saveTeam();
+  document.getElementById('addMemberModal').style.display='none';
+  ['newName','newPin','newTg'].forEach(i=>document.getElementById(i).value='');
+  rebuildSelect();
+  renderSettings();
+}
+function deleteMember(id) {
+  if(!confirm('Delete member? All their data will be lost.'))return;
+  TEAM=TEAM.filter(m=>m.id!==id); saveTeam(); rebuildSelect(); renderSettings();
+}
+
+// PDF
+function exportPDF() {
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const t=today();
+  doc.setFont('helvetica','bold'); doc.setFontSize(20);
+  doc.text('TeamFlow Scale — Weekly Report',20,20);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100);
+  doc.text(`Generated: ${t}`,20,28);
+  let y=40; doc.setTextColor(0);
+  TEAM.forEach(m=>{
+    const u=getU(m.id);
+    const ms=u.sessions.reduce((a,s)=>a+s.dur,0);
+    const done=u.todos.filter(x=>x.done).length,total=u.todos.length;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12);
+    doc.text(`${m.name}`,20,y); y+=6;
+    doc.setFont('helvetica','italic'); doc.setFontSize(10); doc.setTextColor(100);
+    doc.text(m.team,25,y); y+=6;
+    doc.setFont('helvetica','normal'); doc.setTextColor(0);
+    doc.text(`Hours: ${fmtDur(ms)}  |  Tasks: ${done}/${total}  |  Rate: ${total>0?Math.round(done/total*100):0}%`,25,y); y+=6;
+    u.sessions.filter(s=>s.date===t).forEach(s=>{
+      doc.text(`  ${s.date}  ${fmtTime(s.start)} → ${fmtTime(s.end)}  (${fmtDur(s.dur)})`,25,y); y+=5;
+    });
+    y+=6; if(y>260){doc.addPage();y=20;}
+  });
+  doc.save(`teamflow-report-${t}.pdf`);
+}
+
+// AUTO REFRESH
+setInterval(()=>{
+  if(isManager){
+    const active=document.querySelector('.panel.active');
+    if(active?.id==='panel-team') renderTeam();
+    if(active?.id==='panel-timelog') renderTimeLog();
+    if(active?.id==='panel-stats') renderStats();
+  }
+  if(!isManager&&document.getElementById('panel-clock')?.classList.contains('active')) renderSessions();
+},15000);
+</script>
+</body>
+</html>
