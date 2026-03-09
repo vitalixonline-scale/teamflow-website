@@ -311,7 +311,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
       <option value="Marketing Team">Marketing Team</option>
       <option value="Safe Offers Team">Safe Offers Team</option>
       <option value="ReSell Team">ReSell Team</option>
-      <option value="New Sales Team">New Sales Team</option>
+      <option value="Sales Team">Sales Team</option>
       <option value="Warehouse Team">Warehouse Team</option>
     </select>
     <label class="field-label">PIN (4 digits)</label>
@@ -429,7 +429,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
                 <option value="Marketing Team">Marketing</option>
                 <option value="Safe Offers Team">Safe Offers</option>
                 <option value="ReSell Team">ReSell</option>
-                <option value="New Sales Team">New Sales</option>
+                <option value="Sales Team">New Sales</option>
                 <option value="Warehouse Team">Warehouse</option>
               </select>
               <button class="add-btn" onclick="addMeeting()">+</button>
@@ -491,13 +491,13 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────────────
-const TEAM_COLORS = {'Marketing Team':'#00e5a0','Safe Offers Team':'#7c6bff','ReSell Team':'#ff6b35','New Sales Team':'#f0c040','Warehouse Team':'#60a5fa'};
+const TEAM_COLORS = {'Marketing Team':'#00e5a0','Safe Offers Team':'#7c6bff','ReSell Team':'#ff6b35','Sales Team':'#f0c040','Warehouse Team':'#60a5fa'};
 const ADMIN_PIN = '1234';
 const DEFAULT_MEMBERS = [
   {id:'m1',name:'Member 1',team:'Marketing Team',pin:'1111',tg:'',color:'#00e5a0'},
   {id:'m2',name:'Member 2',team:'Safe Offers Team',pin:'2222',tg:'',color:'#7c6bff'},
   {id:'m3',name:'Member 3',team:'ReSell Team',pin:'3333',tg:'',color:'#ff6b35'},
-  {id:'m4',name:'Member 4',team:'New Sales Team',pin:'4444',tg:'',color:'#f0c040'},
+  {id:'m4',name:'Member 4',team:'Sales Team',pin:'4444',tg:'',color:'#f0c040'},
   {id:'m5',name:'Member 5',team:'Warehouse Team',pin:'5555',tg:'',color:'#60a5fa'},
 ];
 
@@ -505,7 +505,7 @@ const DAILY_ROUTINES = {
   'Marketing Team':['Ad account health check (no bans)','Budget check per ad account','Website/landing page validity check','Launch campaigns on META','Create new creatives','Prepare assets (BM, ADS Power/MultiBrowser)','Identify winning ads (best ROAS)','Scaling check (scale up / turn off)','Competitor check (Facebook Ad Library)','Audience refresh','Morning recap in group (spend, revenue, ROAS)','Daily targets check per brand','Pixel firing check','Keitaro stats & redirect check','Backup domain check','Landing page speed check'],
   'Safe Offers Team':['White Page setup & test','Cloaking setup & test','Offer Page check (conversion, design)','Domain health check (active, SSL valid)','Pixel firing check (events working)','Keitaro stats check (redirects, filters)','IP/Bot filter check','Facebook Policy compliance check','Backup domain check for all campaigns','Landing page speed (Core Web Vitals)','Update domain table (whitepage, UTM, pixel, offer domain)','New offer checklist completion'],
   'ReSell Team':['Review today customer contact list','Check hold orders — prioritize','Follow-up check (yesterday callbacks)','Contact existing customers','Update customer status (renewed/callback/dead)','Track daily renewal targets','Mark dead leads','Log best contact times','Daily recap (contacted, renewed, conversion %)','Coordinate with Warehouse for hold orders'],
-  'New Sales Team':['Review new orders from Shopify/WooCommerce','Contact customers on WhatsApp (order confirmation)','Confirm payment method (COD or Card)','Approve or reject ALL orders (none undefined!)','Check hold orders — new sales','Track response time on new orders','Check unanswered orders','Blacklist check for problematic customers','Track peak order hours','EOD recap (orders, confirmed, rejected, COD/Card, delivery rate)','Update order sheet (commission tracking)'],
+  'Sales Team':['Review new orders from Shopify/WooCommerce','Contact customers on WhatsApp (order confirmation)','Confirm payment method (COD or Card)','Approve or reject ALL orders (none undefined!)','Check hold orders — new sales','Track response time on new orders','Check unanswered orders','Blacklist check for problematic customers','Track peak order hours','EOD recap (orders, confirmed, rejected, COD/Card, delivery rate)','Update order sheet (commission tracking)'],
   'Warehouse Team':['Receive approved orders from New Sales/ReSell','Print shipping labels','Pack orders','Check low stock items','EOD inventory update (shipped, returned)','Log returned orders + reason','Log damaged items','Log courier split','Report unfulfilled orders + reason','EOD report (fulfilled vs unfulfilled)'],
 };
 
@@ -691,7 +691,7 @@ function renderKPI(){
       </div>
     </div>
     <div class="tg-panel"><h3>🤖 Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/resell 45 12 2400</code><span>→ contacted renewed revenue</span></div></div></div>`;
-  }else if(team==='New Sales Team'){
+  }else if(team==='Sales Team'){
     cont.innerHTML=`
     <div class="tracking-card">
       <div class="tracking-header"><div class="team-color-dot" style="background:${teamColor(team)}"></div><div class="tracking-title">New Sales KPIs — ${today()}</div></div>
