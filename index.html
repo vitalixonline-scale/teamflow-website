@@ -63,6 +63,15 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .status-pill::before{content:'●';font-size:.5rem}
 .logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 13px;border-radius:8px;font-family:'Mulish',sans-serif;font-size:.76rem;cursor:pointer;transition:all .2s;font-weight:600}
 .logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+.switch-team-btn{background:var(--surface2);border:1.5px solid var(--border);color:var(--text);padding:5px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.76rem;cursor:pointer;transition:all .2s;font-weight:700}
+.switch-team-btn:hover{border-color:var(--accent);color:var(--accent)}
+.team-switcher-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px}
+.team-switcher{background:var(--surface);border-radius:18px;padding:28px;width:100%;max-width:360px;box-shadow:var(--shadow-lg)}
+.team-switcher h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:18px}
+.team-opt{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface2);border-radius:10px;margin-bottom:8px;cursor:pointer;border:1.5px solid transparent;transition:all .2s;font-weight:600;font-size:.88rem}
+.team-opt:hover{border-color:var(--accent)}
+.team-opt.active{border-color:var(--accent);background:var(--accent-dim)}
+.team-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 /* NAV */
 .nav{display:flex;gap:2px;padding:16px 28px 0;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
@@ -332,6 +341,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="topbar-right">
       <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <div class="status-pill offline" id="statusPill">Offline</div>
+      <button class="switch-team-btn" id="switchTeamBtn" onclick="showSwitchTeam()" style="display:none">🔄 <span id="currentTeamLabel">—</span></button>
       <div class="avatar" id="topAvatar"></div>
       <div>
         <div style="font-size:.85rem;font-weight:700;font-family:'Syne',sans-serif" id="topTeamName">—</div>
@@ -489,6 +499,15 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
+<!-- TEAM SWITCHER -->
+<div id="teamSwitcherOverlay" class="team-switcher-overlay" style="display:none" onclick="if(event.target===this)hideSwitchTeam()">
+  <div class="team-switcher">
+    <h3>🔄 Switch Team View</h3>
+    <div id="teamSwitcherOptions"></div>
+    <button class="modal-cancel" style="width:100%;margin-top:8px" onclick="hideSwitchTeam()">Cancel</button>
+  </div>
+</div>
+
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────────────
 const TEAM_COLORS = {'Marketing Team':'#00e5a0','Safe Offers Team':'#7c6bff','ReSell Team':'#ff6b35','Sales Team':'#f0c040','Warehouse Team':'#60a5fa'};
@@ -586,8 +605,16 @@ function startApp(){
   const av=document.getElementById('topAvatar');
   av.textContent=initials(currentUser.name);
   av.style.cssText=`background:${color}18;color:${color};border:1.5px solid ${color}44;width:36px;height:36px;`;
+  currentUser.activeTeam = currentUser.team;
+  currentUser.teams = currentUser.teams || [currentUser.team];
   document.getElementById('topTeamName').textContent=currentUser.team;
   document.getElementById('topRole').textContent=isManager?'Administrator':currentUser.name;
+  document.getElementById('currentTeamLabel').textContent=currentUser.team.replace(' Team','');
+  if(!isManager && currentUser.teams && currentUser.teams.length > 0){
+    document.getElementById('switchTeamBtn').style.display='flex';
+    document.getElementById('switchTeamBtn').style.alignItems='center';
+    document.getElementById('switchTeamBtn').style.gap='5px';
+  }
   buildNav();
   if(!isManager){
     // Auto-populate daily routines from team
@@ -786,6 +813,42 @@ function deleteMember(id){if(!confirm('Delete member? All their data will be los
 
 // PDF
 function exportPDF(){const{jsPDF}=window.jspdf;const doc=new jsPDF();const t=today();doc.setFont('helvetica','bold');doc.setFontSize(20);doc.text('TeamFlow Scale — Report',20,20);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(100);doc.text(`Generated: ${t}`,20,28);let y=40;doc.setTextColor(0);TEAM.forEach(m=>{const u=getU(m.id);const ms=u.sessions.reduce((a,s)=>a+s.dur,0);const done=u.todos.filter(x=>x.done).length,total=u.todos.length;const kpi=KPI[m.id]?.[t]||{};doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(`${m.name} — ${m.team}`,20,y);y+=7;doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(`Hours: ${fmtDur(ms)}  |  Tasks: ${done}/${total}`,25,y);y+=6;if(Object.keys(kpi).length){doc.text('KPIs: '+Object.entries(kpi).map(([k,v])=>`${k}: ${v}`).join(' | '),25,y);y+=6}y+=4;if(y>260){doc.addPage();y=20}});doc.save(`teamflow-report-${t}.pdf`)}
+
+// ── SWITCH TEAM ─────────────────────────────────────────────────────────────
+function showSwitchTeam(){
+  const teams = currentUser.teams || [currentUser.team];
+  const opts = document.getElementById('teamSwitcherOptions');
+  opts.innerHTML = teams.map(t => `
+    <div class="team-opt ${currentUser.activeTeam===t?'active':''}" onclick="switchToTeam('${t}')">
+      <div class="team-color" style="background:${teamColor(t)}"></div>
+      ${t}
+      ${currentUser.activeTeam===t?' ✓':''}
+    </div>`).join('');
+  // Also show other teams they can add
+  const otherTeams = Object.keys(TEAM_COLORS).filter(t => !teams.includes(t));
+  if(otherTeams.length) {
+    opts.innerHTML += `<div style="font-size:.72rem;color:var(--muted);margin:12px 0 6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Other teams</div>`;
+    opts.innerHTML += otherTeams.map(t => `
+      <div class="team-opt" onclick="switchToTeam('${t}')" style="opacity:.5">
+        <div class="team-color" style="background:${teamColor(t)}"></div>
+        ${t}
+      </div>`).join('');
+  }
+  document.getElementById('teamSwitcherOverlay').style.display='flex';
+}
+function hideSwitchTeam(){document.getElementById('teamSwitcherOverlay').style.display='none'}
+function switchToTeam(team){
+  currentUser.activeTeam = team;
+  currentUser.team = team;
+  document.getElementById('currentTeamLabel').textContent = team.replace(' Team','');
+  document.getElementById('topTeamName').textContent = team;
+  const color = teamColor(team);
+  const av = document.getElementById('topAvatar');
+  av.style.cssText = `background:${color}18;color:${color};border:1.5px solid ${color}44;width:36px;height:36px;`;
+  hideSwitchTeam();
+  renderKPI();
+  renderDaily();
+}
 
 // AUTO REFRESH
 setInterval(()=>{if(isManager){const active=document.querySelector('.panel.active');if(active?.id==='panel-team')renderTeam();if(active?.id==='panel-timelog')renderTimeLog();if(active?.id==='panel-kpioverview')renderKPIOverview()}},15000);
