@@ -14,24 +14,24 @@ html{overflow-x:hidden;max-width:100%}
 body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden;max-width:100vw}
 
 /* ONBOARDING */
-#onboarding{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
-.ob-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:44px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);text-align:center}
+#onboarding{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.ob-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:32px 24px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);text-align:center;margin:auto}
 .ob-logo{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;margin-bottom:6px;letter-spacing:-1px}
 .ob-logo span{color:var(--accent)}
 .ob-step{display:none}.ob-step.active{display:block}
-.ob-icon{font-size:3.2rem;margin-bottom:18px}
-.ob-title{font-size:1.4rem;font-weight:700;margin-bottom:10px}
-.ob-desc{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:26px}
+.ob-icon{font-size:2.4rem;margin-bottom:12px}
+.ob-title{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+.ob-desc{color:var(--muted);font-size:.85rem;line-height:1.6;margin-bottom:20px}
 .ob-dots{display:flex;gap:6px;justify-content:center;margin-bottom:22px}
 .ob-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
 .ob-dot.active{background:var(--accent);width:24px;border-radius:4px}
-.ob-btn{width:100%;padding:14px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.ob-btn{width:100%;padding:13px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
 .ob-btn:hover{opacity:.85;transform:translateY(-1px)}
 .ob-btn.sec{background:transparent;color:var(--muted);border:1px solid var(--border);margin-bottom:0}
 
 /* LOGIN */
-#loginScreen{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:38px;width:100%;max-width:420px;box-shadow:var(--shadow-lg)}
+#loginScreen{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:28px 22px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);margin:auto}
 .login-logo{text-align:center;margin-bottom:32px}
 .login-logo h1{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;letter-spacing:-1px}
 .login-logo h1 span{color:var(--accent)}
@@ -40,7 +40,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .inp{width:100%;padding:12px 15px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Mulish',sans-serif;font-size:.92rem;margin-bottom:14px;transition:border-color .2s}
 .inp:focus{outline:none;border-color:var(--accent)}
 .inp::placeholder{color:var(--muted)}
-.btn-primary{width:100%;padding:13px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.btn-primary{width:100%;padding:13px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;cursor:pointer;transition:all .2s;margin-bottom:10px;-webkit-tap-highlight-color:transparent}
 .btn-primary:hover{opacity:.85;transform:translateY(-1px)}
 .divider{text-align:center;color:var(--muted);font-size:.78rem;margin:12px 0;position:relative}
 .divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
