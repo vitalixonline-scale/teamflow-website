@@ -10,6 +10,7 @@
 [data-theme="dark"]{--bg:#080a10;--surface:#0f1219;--surface2:#171c27;--surface3:#1e2434;--border:#252d3d;--text:#e8ecf4;--muted:#5a6480;--accent:#00e5a0;--accent-dim:rgba(0,229,160,.1);--accent2:#7c6bff;--accent2-dim:rgba(124,107,255,.1);--accent3:#ff6b35;--accent3-dim:rgba(255,107,53,.1);--accent4:#f0c040;--accent4-dim:rgba(240,192,64,.1);--danger:#ff4d6d;--tg:#2aabee;--shadow:0 2px 24px rgba(0,0,0,.5);--shadow-lg:0 8px 48px rgba(0,0,0,.7)}
 [data-theme="light"]{--bg:#f0f2f7;--surface:#fff;--surface2:#f5f7fb;--surface3:#ebeef5;--border:#dde2ed;--text:#0d1117;--muted:#6b7594;--accent:#00b37a;--accent-dim:rgba(0,179,122,.1);--accent2:#5b4de8;--accent2-dim:rgba(91,77,232,.1);--accent3:#e85a1e;--accent3-dim:rgba(232,90,30,.1);--accent4:#c9940a;--accent4-dim:rgba(201,148,10,.1);--danger:#e0324f;--tg:#0088cc;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;max-width:100%}
 body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden;max-width:100vw}
 
 /* ONBOARDING */
@@ -50,10 +51,10 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* APP */
 #app{display:none}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:var(--shadow);overflow:hidden;max-width:100vw}
 .topbar-logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-0.5px}
 .topbar-logo span{color:var(--accent)}
-.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-right{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;flex-shrink:0;font-family:'Syne',sans-serif}
 .theme-btn{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
 .theme-btn:hover{background:var(--border)}
@@ -74,14 +75,14 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .team-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 /* NAV */
-.nav{display:flex;gap:2px;padding:16px 28px 0;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nav{display:flex;gap:2px;padding:16px 28px 0;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;overflow-y:visible;scrollbar-width:none;max-width:100vw}
 .nav::-webkit-scrollbar{display:none}
 .nav-tab{padding:9px 20px;border-radius:8px 8px 0 0;font-size:.81rem;font-weight:700;cursor:pointer;color:var(--muted);transition:all .2s;white-space:nowrap;border:1px solid transparent;border-bottom:none;position:relative;bottom:-1px;font-family:'Syne',sans-serif}
 .nav-tab.active{background:var(--bg);border-color:var(--border);color:var(--text)}
 .nav-tab:not(.active):hover{color:var(--text)}
 
 /* CONTENT */
-.content{padding:28px;max-width:1200px;margin:0 auto}
+.content{padding:28px;max-width:1200px;margin:0 auto;overflow-x:hidden}
 .panel{display:none}
 .panel.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -242,24 +243,31 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .team-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif}
 .history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--surface2);border-radius:9px;margin-bottom:6px;font-size:.82rem}
 
-@media(max-width:600px){
-  .content{padding:12px}
-  .topbar{padding:10px 14px}
-  .topbar-right{gap:6px}
+@media(max-width:768px){
+  .content{padding:12px;overflow-x:hidden}
+  .topbar{padding:10px 14px;overflow:hidden}
+  .topbar-logo{font-size:1.1rem}
+  .topbar-right{gap:5px;flex-shrink:0}
   .clock-num{font-size:2rem}
   .stats-row{grid-template-columns:1fr 1fr}
   .input-row{flex-direction:column}
   .team-grid{grid-template-columns:1fr}
   .metric-grid{grid-template-columns:1fr 1fr}
-  .nav{padding:12px 14px 0}
-  .nav-tab{padding:8px 14px;font-size:.76rem}
-  .card{padding:18px 16px}
-  .tracking-card{padding:18px 16px}
-  .clock-hero{flex-direction:column;align-items:flex-start}
-  .tg-panel{padding:16px}
+  .nav{padding:12px 12px 0}
+  .nav-tab{padding:8px 12px;font-size:.74rem}
+  .card{padding:16px 14px}
+  .tracking-card{padding:16px 14px}
+  .clock-hero{flex-direction:column;align-items:flex-start;gap:14px}
+  .tg-panel{padding:14px}
   .mc-stats{grid-template-columns:1fr 1fr}
-  .switch-team-btn span{display:none}
-  * {max-width:100%;box-sizing:border-box}
+  .time-tbl{font-size:.76rem}
+  .time-tbl th,.time-tbl td{padding:8px 10px}
+  .tg-cmds{gap:4px}
+  .tg-cmd{padding:7px 10px;font-size:.76rem}
+  .add-row{flex-wrap:wrap}
+  .member-card{padding:16px}
+  .modal{padding:22px}
+  .topbar-right > div:nth-child(5){display:none}
 }
 </style>
 </head>
@@ -359,7 +367,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="topbar-right">
       <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <div class="status-pill offline" id="statusPill">Offline</div>
-      <button class="switch-team-btn" id="switchTeamBtn" onclick="showSwitchTeam()" style="display:none">🔄 <span id="currentTeamLabel">—</span></button>
+      <button class="switch-team-btn" id="switchTeamBtn" onclick="showSwitchTeam()" style="display:none"><span id="currentTeamLabel">—</span></button>
       <div class="avatar" id="topAvatar"></div>
       <div>
         <div style="font-size:.85rem;font-weight:700;font-family:'Syne',sans-serif" id="topTeamName">—</div>
@@ -840,7 +848,7 @@ function showSwitchTeam(){
     <div class="team-opt ${currentUser.team===t?'active':''}" onclick="switchToTeam('${t}')">
       <div class="team-color" style="background:${teamColor(t)}"></div>
       <span style="flex:1">${t}</span>
-      ${currentUser.team===t?'<span style="color:var(--accent);font-size:.75rem;font-weight:700">Current</span>':'<span style="color:var(--muted);font-size:.75rem">🔐 PIN</span>'}
+      ${currentUser.team===t?'<span style="color:var(--accent);font-size:.75rem;font-weight:700">Active</span>':'<span style="color:var(--muted);font-size:.75rem;font-family:'JetBrains Mono',monospace">PIN</span>'}
     </div>`).join('');
   document.getElementById('teamSwitcherOverlay').style.display='flex';
 }
