@@ -10,7 +10,7 @@
 [data-theme="dark"]{--bg:#080a10;--surface:#0f1219;--surface2:#171c27;--surface3:#1e2434;--border:#252d3d;--text:#e8ecf4;--muted:#5a6480;--accent:#00e5a0;--accent-dim:rgba(0,229,160,.1);--accent2:#7c6bff;--accent2-dim:rgba(124,107,255,.1);--accent3:#ff6b35;--accent3-dim:rgba(255,107,53,.1);--accent4:#f0c040;--accent4-dim:rgba(240,192,64,.1);--danger:#ff4d6d;--tg:#2aabee;--shadow:0 2px 24px rgba(0,0,0,.5);--shadow-lg:0 8px 48px rgba(0,0,0,.7)}
 [data-theme="light"]{--bg:#f0f2f7;--surface:#fff;--surface2:#f5f7fb;--surface3:#ebeef5;--border:#dde2ed;--text:#0d1117;--muted:#6b7594;--accent:#00b37a;--accent-dim:rgba(0,179,122,.1);--accent2:#5b4de8;--accent2-dim:rgba(91,77,232,.1);--accent3:#e85a1e;--accent3-dim:rgba(232,90,30,.1);--accent4:#c9940a;--accent4-dim:rgba(201,148,10,.1);--danger:#e0324f;--tg:#0088cc;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden;max-width:100vw}
 
 /* ONBOARDING */
 #onboarding{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
@@ -242,7 +242,25 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .team-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif}
 .history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--surface2);border-radius:9px;margin-bottom:6px;font-size:.82rem}
 
-@media(max-width:600px){.content{padding:14px}.topbar{padding:10px 16px}.clock-num{font-size:2.4rem}.stats-row{grid-template-columns:1fr 1fr}.input-row{flex-direction:column}}
+@media(max-width:600px){
+  .content{padding:12px}
+  .topbar{padding:10px 14px}
+  .topbar-right{gap:6px}
+  .clock-num{font-size:2rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .input-row{flex-direction:column}
+  .team-grid{grid-template-columns:1fr}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .nav{padding:12px 14px 0}
+  .nav-tab{padding:8px 14px;font-size:.76rem}
+  .card{padding:18px 16px}
+  .tracking-card{padding:18px 16px}
+  .clock-hero{flex-direction:column;align-items:flex-start}
+  .tg-panel{padding:16px}
+  .mc-stats{grid-template-columns:1fr 1fr}
+  .switch-team-btn span{display:none}
+  * {max-width:100%;box-sizing:border-box}
+}
 </style>
 </head>
 <body>
@@ -816,28 +834,25 @@ function exportPDF(){const{jsPDF}=window.jspdf;const doc=new jsPDF();const t=tod
 
 // ── SWITCH TEAM ─────────────────────────────────────────────────────────────
 function showSwitchTeam(){
-  const teams = currentUser.teams || [currentUser.team];
   const opts = document.getElementById('teamSwitcherOptions');
-  opts.innerHTML = teams.map(t => `
-    <div class="team-opt ${currentUser.activeTeam===t?'active':''}" onclick="switchToTeam('${t}')">
+  opts.innerHTML = `<p style="color:var(--muted);font-size:.8rem;margin-bottom:14px">Enter the PIN of the team you want to switch to.</p>`;
+  opts.innerHTML += Object.keys(TEAM_COLORS).map(t => `
+    <div class="team-opt ${currentUser.team===t?'active':''}" onclick="switchToTeam('${t}')">
       <div class="team-color" style="background:${teamColor(t)}"></div>
-      ${t}
-      ${currentUser.activeTeam===t?' ✓':''}
+      <span style="flex:1">${t}</span>
+      ${currentUser.team===t?'<span style="color:var(--accent);font-size:.75rem;font-weight:700">Current</span>':'<span style="color:var(--muted);font-size:.75rem">🔐 PIN</span>'}
     </div>`).join('');
-  // Also show other teams they can add
-  const otherTeams = Object.keys(TEAM_COLORS).filter(t => !teams.includes(t));
-  if(otherTeams.length) {
-    opts.innerHTML += `<div style="font-size:.72rem;color:var(--muted);margin:12px 0 6px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Other teams</div>`;
-    opts.innerHTML += otherTeams.map(t => `
-      <div class="team-opt" onclick="switchToTeam('${t}')" style="opacity:.5">
-        <div class="team-color" style="background:${teamColor(t)}"></div>
-        ${t}
-      </div>`).join('');
-  }
   document.getElementById('teamSwitcherOverlay').style.display='flex';
 }
 function hideSwitchTeam(){document.getElementById('teamSwitcherOverlay').style.display='none'}
 function switchToTeam(team){
+  if(team === currentUser.team){hideSwitchTeam();return;}
+  // Find member with this team to get PIN
+  const member = TEAM.find(m => m.team === team);
+  if(!member){alert('No member found for this team.');return;}
+  const pin = prompt(`🔐 Enter PIN for ${team}:`);
+  if(!pin){return;}
+  if(pin !== member.pin){alert('❌ Wrong PIN!');return;}
   currentUser.activeTeam = team;
   currentUser.team = team;
   document.getElementById('currentTeamLabel').textContent = team.replace(' Team','');
