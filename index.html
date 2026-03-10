@@ -557,22 +557,22 @@ const DAILY_ROUTINES = {
 const OFFER_CHECKLIST = ['White Page created & tested','Cloaking configured in Keitaro','Offer Page ready & converting','Domain health check passed (SSL ✅)','Pixel firing correctly','UTM parameters set','IP/Bot filters active','Facebook Policy compliant','Backup domain ready','Landing page speed OK','Domain table updated','Marketing Team notified ✅'];
 
 // ── STATE ───────────────────────────────────────────────────────────────────
-let TEAM = JSON.parse(localStorage.getItem('tf_members') || JSON.stringify(DEFAULT_MEMBERS));
-let STATE = JSON.parse(localStorage.getItem('tf_state') || '{}');
-let MEETINGS = JSON.parse(localStorage.getItem('tf_meetings') || '[]');
-let STOCK = JSON.parse(localStorage.getItem('tf_stock') || '{}');
-let DOMAINS = JSON.parse(localStorage.getItem('tf_domains') || '[]');
-let OFFERS = JSON.parse(localStorage.getItem('tf_offers') || '{}');
-let KPI = JSON.parse(localStorage.getItem('tf_kpi') || '{}');
+let TEAM = (function(){try{return JSON.parse(localStorage.getItem('tf_members')||JSON.stringify(DEFAULT_MEMBERS))}catch(e){return JSON.parse(JSON.stringify(DEFAULT_MEMBERS))}})();
+let STATE = (function(){try{return JSON.parse(localStorage.getItem('tf_state')||'{}')}catch(e){return {}}})();
+let MEETINGS = (function(){try{return JSON.parse(localStorage.getItem('tf_meetings')||'[]')}catch(e){return JSON.parse('[]')}})();
+let STOCK = (function(){try{return JSON.parse(localStorage.getItem('tf_stock')||'{}')}catch(e){return JSON.parse('{}')}})();
+let DOMAINS = (function(){try{return JSON.parse(localStorage.getItem('tf_domains')||'[]')}catch(e){return JSON.parse('[]')}})();
+let OFFERS = (function(){try{return JSON.parse(localStorage.getItem('tf_offers')||'{}')}catch(e){return JSON.parse('{}')}})();
+let KPI = (function(){try{return JSON.parse(localStorage.getItem('tf_kpi')||'{}')}catch(e){return JSON.parse('{}')}})();
 let currentUser = null, isManager = false, clockInterval = null, obStep = 0;
 
-function saveState(){localStorage.setItem('tf_state',JSON.stringify(STATE))}
-function saveTeam(){localStorage.setItem('tf_members',JSON.stringify(TEAM))}
-function saveMeetings(){localStorage.setItem('tf_meetings',JSON.stringify(MEETINGS))}
-function saveStock(){localStorage.setItem('tf_stock',JSON.stringify(STOCK))}
-function saveDomains(){localStorage.setItem('tf_domains',JSON.stringify(DOMAINS))}
-function saveOffers(){localStorage.setItem('tf_offers',JSON.stringify(OFFERS))}
-function saveKPI(){localStorage.setItem('tf_kpi',JSON.stringify(KPI))}
+function saveState(){try{localStorage.setItem('tf_state',JSON.stringify(STATE))}catch(e){}}
+function saveTeam(){try{localStorage.setItem('tf_members',JSON.stringify(TEAM))}catch(e){}}
+function saveMeetings(){try{localStorage.setItem('tf_meetings',JSON.stringify(MEETINGS))}catch(e){}}
+function saveStock(){try{localStorage.setItem('tf_stock',JSON.stringify(STOCK))}catch(e){}}
+function saveDomains(){try{localStorage.setItem('tf_domains',JSON.stringify(DOMAINS))}catch(e){}}
+function saveOffers(){try{localStorage.setItem('tf_offers',JSON.stringify(OFFERS))}catch(e){}}
+function saveKPI(){try{localStorage.setItem('tf_kpi',JSON.stringify(KPI))}catch(e){}}
 function getU(id){if(!STATE[id])STATE[id]={sessions:[],todos:[],daily:[],clockedIn:false,clockStart:null};return STATE[id]}
 function today(){return new Date().toISOString().slice(0,10)}
 function fmtMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`}
@@ -583,17 +583,26 @@ function teamColor(t){return TEAM_COLORS[t]||'#6b7494'}
 function getKPI(uid){if(!KPI[uid])KPI[uid]={};if(!KPI[uid][today()])KPI[uid][today()]={};return KPI[uid][today()]}
 
 // ── THEME ───────────────────────────────────────────────────────────────────
-function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('tf_theme',d?'light':'dark')}
-function initTheme(){const s=localStorage.getItem('tf_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.getElementById('themeBtn').textContent=s==='dark'?'🌙':'☀️'}
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';try{localStorage.setItem('tf_theme',d?'light':'dark')}catch(e){}}
+function initTheme(){let s='dark';try{s=localStorage.getItem('tf_theme')||'dark';}catch(e){}document.documentElement.setAttribute('data-theme',s);document.getElementById('themeBtn').textContent=s==='dark'?'🌙':'☀️'}
 
 // ── ONBOARDING ──────────────────────────────────────────────────────────────
 function obNext(){document.getElementById(`ob${obStep}`).classList.remove('active');document.getElementById(`dot${obStep}`).classList.remove('active');obStep++;document.getElementById(`ob${obStep}`).classList.add('active');document.getElementById(`dot${obStep}`).classList.add('active')}
-function skipOnboarding(){localStorage.setItem('tf_ob_done','1');document.getElementById('onboarding').style.display='none';document.getElementById('loginScreen').style.display='flex'}
+function skipOnboarding(){
+  try{localStorage.setItem('tf_ob_done','1');}catch(e){}
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
 
 // ── LOGIN ───────────────────────────────────────────────────────────────────
 window.onload=function(){
   initTheme();
-  if(localStorage.getItem('tf_ob_done')){document.getElementById('onboarding').style.display='none';document.getElementById('loginScreen').style.display='flex'}
+  let obDone = false;
+  try{obDone = !!localStorage.getItem('tf_ob_done');}catch(e){}
+  if(obDone){
+    document.getElementById('onboarding').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+  }
   rebuildSelect();
 };
 function rebuildSelect(){
