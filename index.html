@@ -186,7 +186,7 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .status-inactive{background:var(--surface2);color:var(--muted);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap}
 .camp-link{color:var(--tg);font-family:'JetBrains Mono',monospace;font-size:.72rem;text-decoration:none;white-space:nowrap}
 .camp-link:hover{text-decoration:underline}
-.camp-pixel{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+.camp-pixel{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);cursor:pointer;user-select:all}
 .camp-target{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;font-size:.8rem}
 .camp-revenue{font-family:'JetBrains Mono',monospace;color:var(--accent2);font-weight:600;font-size:.8rem}
 .edit-row-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 9px;border-radius:6px;font-size:.72rem;cursor:pointer}
@@ -1169,6 +1169,39 @@ function exportPDF(){
   }catch(e){alert('PDF export failed: '+e.message)}
 }
 
+// ── COPY HELPERS ──────────────────────────────────────────────────────────
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showCopyToast('Copied!');
+  }).catch(() => {
+    // Fallback
+    const el = document.createElement('textarea');
+    el.value = text; document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    showCopyToast('Copied!');
+  });
+}
+function copyCampaignRow(data) {
+  const parts = data.split('|');
+  const labels = ['Brand','Type','Link','URL Campaign','UTM','Pixel','Status','Daily Target','Monthly Target'];
+  const text = labels.map((l,i) => l+': '+(parts[i]||'-')).join('\n');
+  copyText(text);
+}
+function showCopyToast(msg) {
+  let t = document.getElementById('copyToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'copyToast';
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;padding:8px 20px;border-radius:20px;font-family:Syne,sans-serif;font-weight:700;font-size:.82rem;z-index:9999;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 1500);
+}
+
+
 // ── CAMPAIGNS ──────────────────────────────────────────────────────────────
 if(CAMPAIGNS.length===0){
   CAMPAIGNS=[
@@ -1217,7 +1250,7 @@ function renderCampaigns(){
         +'<td>'+linkHtml+'</td>'
         +'<td style="font-weight:600;font-size:.75rem">'+(c.url_campaign||'-')+'</td>'
         +'<td style="font-size:.75rem;color:var(--muted)">'+(c.utm||'-')+'</td>'
-        +'<td class="camp-pixel">'+(c.pixel?c.pixel.substring(0,14)+'...':'-')+'</td>'
+        +'<td class="camp-pixel" style="user-select:all;cursor:pointer" onclick="copyText(this.textContent)" title="Click to copy">'+(c.pixel||'-')+'</td>'
         +'<td><span class="'+sc+'">'+c.status+'</span></td>'
         +'<td class="camp-target">'+(c.daily_target?'€'+c.daily_target.toLocaleString():'-')+'</td>'
         +'<td class="camp-target" style="color:var(--accent3)">'+(c.monthly_target?'€'+c.monthly_target.toLocaleString():'-')+'</td>'
@@ -1232,7 +1265,7 @@ function renderCampaigns(){
     +'<td class="camp-target">€'+totalDaily.toLocaleString()+'</td>'
     +'<td class="camp-target" style="color:var(--accent3)">€'+totalMonthly.toLocaleString()+'</td>'
     +'<td class="camp-revenue">€'+totalRevenue.toLocaleString()+'</td>'
-    +'<td colspan="'+(canEdit?4:3)+'"></td></tr>';
+    +'<td colspan="4"></td></tr>';
   html+='</tbody></table></div>';
   cont.innerHTML=html;
 }
