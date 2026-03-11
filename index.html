@@ -3,18 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache">
 <title>TeamFlow Scale</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--bg:#080a10;--surface:#0f1219;--surface2:#171c27;--surface3:#1e2434;--border:#252d3d;--text:#e8ecf4;--muted:#5a6480;--accent:#00e5a0;--accent-dim:rgba(0,229,160,.1);--accent2:#7c6bff;--accent2-dim:rgba(124,107,255,.1);--accent3:#ff6b35;--accent3-dim:rgba(255,107,53,.1);--accent4:#f0c040;--danger:#ff4d6d;--tg:#2aabee;--shadow:0 2px 24px rgba(0,0,0,.5);--shadow-lg:0 8px 48px rgba(0,0,0,.7)}
-[data-theme="light"]{--bg:#f0f2f7;--surface:#fff;--surface2:#f5f7fb;--surface3:#ebeef5;--border:#dde2ed;--text:#0d1117;--muted:#6b7594;--accent:#00b37a;--accent-dim:rgba(0,179,122,.1);--accent2:#5b4de8;--accent2-dim:rgba(91,77,232,.1);--accent3:#e85a1e;--accent3-dim:rgba(232,90,30,.1);--accent4:#c9940a;--danger:#e0324f;--tg:#0088cc;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12)}
+:root{--bg:#080a10;--surface:#0f1219;--surface2:#171c27;--surface3:#1e2434;--border:#252d3d;--text:#e8ecf4;--muted:#5a6480;--accent:#00e5a0;--accent-dim:rgba(0,229,160,.1);--accent2:#7c6bff;--accent2-dim:rgba(124,107,255,.1);--accent3:#ff6b35;--accent3-dim:rgba(255,107,53,.1);--accent4:#f0c040;--accent4-dim:rgba(240,192,64,.1);--danger:#ff4d6d;--tg:#2aabee;--shadow:0 2px 24px rgba(0,0,0,.5);--shadow-lg:0 8px 48px rgba(0,0,0,.7)}
+[data-theme="light"]{--bg:#f0f2f7;--surface:#fff;--surface2:#f5f7fb;--surface3:#ebeef5;--border:#dde2ed;--text:#0d1117;--muted:#6b7594;--accent:#00b37a;--accent-dim:rgba(0,179,122,.1);--accent2:#5b4de8;--accent2-dim:rgba(91,77,232,.1);--accent3:#e85a1e;--accent3-dim:rgba(232,90,30,.1);--accent4:#c9940a;--accent4-dim:rgba(201,148,10,.1);--danger:#e0324f;--tg:#0088cc;--shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12)}
 html,body{margin:0;padding:0;overflow-x:hidden;max-width:100%;box-sizing:border-box}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-
-/* SCREENS */
 .screen{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .screen.active{display:flex}
 .card-wrap{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px 24px;width:100%;max-width:440px;box-shadow:var(--shadow-lg);text-align:center}
@@ -38,36 +36,27 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .divider{text-align:center;color:var(--muted);font-size:.78rem;margin:10px 0;position:relative}
 .divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
 .divider::before{left:0}.divider::after{right:0}
-.tg-hint{margin-top:14px;display:flex;align-items:center;gap:8px;background:rgba(42,171,238,.08);border:1px solid rgba(42,171,238,.2);border-radius:10px;padding:10px 14px;font-size:.78rem;color:var(--tg);text-align:left}
-
-/* APP */
 #app{display:none;min-height:100vh;overflow-x:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;overflow:hidden}
-.topbar-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;flex-shrink:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.topbar-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800}
 .topbar-logo span{color:var(--accent)}
-.topbar-right{display:flex;align-items:center;gap:8px;overflow:hidden;flex-shrink:0}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;font-family:'Syne',sans-serif;flex-shrink:0}
-.theme-btn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
-.status-pill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:700;flex-shrink:0}
+.theme-btn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.status-pill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
 .status-pill.online{background:var(--accent-dim);color:var(--accent)}
 .status-pill.offline{background:var(--surface2);color:var(--muted)}
 .status-pill::before{content:'●';font-size:.48rem}
-.switch-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.72rem;cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap}
-.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:8px;font-family:'Mulish',sans-serif;font-size:.72rem;cursor:pointer;font-weight:600;flex-shrink:0}
-
-/* NAV */
+.switch-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:.72rem;cursor:pointer;font-weight:700;white-space:nowrap}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:8px;font-size:.72rem;cursor:pointer}
 .nav{display:flex;gap:2px;padding:14px 16px 0;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nav-tab{padding:8px 14px;border-radius:8px 8px 0 0;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;border:1px solid transparent;border-bottom:none;position:relative;bottom:-1px;font-family:'Syne',sans-serif;flex-shrink:0}
+.nav-tab{padding:8px 14px;border-radius:8px 8px 0 0;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;border:1px solid transparent;border-bottom:none;position:relative;bottom:-1px;font-family:'Syne',sans-serif}
 .nav-tab.active{background:var(--bg);border-color:var(--border);color:var(--text)}
-
-/* CONTENT */
-.content{padding:18px 16px;max-width:1100px;margin:0 auto;overflow-x:hidden}
+.content{padding:18px 16px;max-width:1100px;margin:0 auto}
 .panel{display:none}
 .panel.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-/* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
 .card-title{font-size:.67rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-family:'Syne',sans-serif}
 .stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
@@ -75,8 +64,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
 .stat-num{font-family:'JetBrains Mono',monospace;font-size:1.7rem;font-weight:500;line-height:1;margin-bottom:4px}
 .stat-lbl{font-size:.7rem;color:var(--muted);font-weight:600}
-
-/* CLOCK */
 .clock-hero{display:flex;flex-direction:column;gap:14px}
 @media(min-width:600px){.clock-hero{flex-direction:row;align-items:center;justify-content:space-between}}
 .clock-num{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:500;color:var(--accent);letter-spacing:-2px}
@@ -88,8 +75,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .session-row{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--surface2);border-radius:9px;margin-bottom:7px;font-size:.83rem}
 .mono{font-family:'JetBrains Mono',monospace;color:var(--accent2)}
 .dur{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600}
-
-/* TODOS */
 .todo-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;border:1.5px solid var(--border);margin-bottom:7px;background:var(--surface)}
 .todo-item.done{opacity:.45}
 .todo-item.done .todo-label{text-decoration:line-through;color:var(--muted)}
@@ -106,8 +91,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .add-inp:focus{outline:none;border-color:var(--accent)}
 .pri-sel,.team-sel{padding:10px;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Mulish',sans-serif;font-size:.82rem}
 .add-btn{padding:10px 16px;background:var(--accent);color:#000;border:none;border-radius:9px;font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer}
-
-/* DAILY */
 .daily-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:9px;background:var(--surface2);margin-bottom:7px;cursor:pointer}
 .daily-item.done{opacity:.5}
 .daily-item.done .daily-lbl{text-decoration:line-through;color:var(--muted)}
@@ -117,8 +100,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .prog-wrap{background:var(--surface2);border-radius:20px;height:6px;overflow:hidden;margin-bottom:16px}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:20px;transition:width .4s}
 .prog-lbl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-bottom:5px}
-
-/* KPI */
 .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
 @media(min-width:500px){.metric-grid{grid-template-columns:repeat(3,1fr)}}
 .metric-box{background:var(--surface2);border-radius:10px;padding:13px}
@@ -128,8 +109,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .metric-inp{flex:1;min-width:90px;padding:10px 11px;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.86rem}
 .metric-inp:focus{outline:none;border-color:var(--accent)}
 .submit-btn{padding:10px 16px;background:var(--accent);color:#000;border:none;border-radius:9px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer}
-
-/* TEAM CARDS */
 .team-grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:600px){.team-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:900px){.team-grid{grid-template-columns:repeat(3,1fr)}}
@@ -141,49 +120,35 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .mc-stat{background:var(--surface2);border-radius:8px;padding:9px 11px}
 .mc-stat .sl{font-size:.64rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:2px;font-weight:700}
 .mc-stat .sv{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:500}
-
-/* MEETINGS */
 .meeting-item{display:flex;align-items:center;gap:13px;padding:12px 14px;background:var(--surface2);border-radius:10px;margin-bottom:8px}
 .meeting-time{font-family:'JetBrains Mono',monospace;color:var(--accent2);font-weight:500;font-size:.88rem;flex-shrink:0}
 .meeting-title{flex:1;font-weight:600;font-size:.86rem}
 .meeting-team{font-size:.71rem;color:var(--muted);font-weight:600}
-
-/* STOCK */
 .stock-item{display:flex;align-items:center;gap:13px;padding:11px 14px;background:var(--surface2);border-radius:9px;margin-bottom:7px}
 .stock-bar-wrap{flex:1;background:var(--surface3);border-radius:20px;height:5px;overflow:hidden}
 .stock-bar{height:100%;border-radius:20px;transition:width .4s}
 .stock-qty{font-family:'JetBrains Mono',monospace;font-size:.87rem;font-weight:500;flex-shrink:0}
 .stock-name{font-size:.84rem;font-weight:600;min-width:90px}
-
-/* DOMAIN */
 .domain-item{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--surface2);border-radius:9px;margin-bottom:7px;flex-wrap:wrap}
 .domain-status{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .domain-name{font-size:.83rem;font-weight:600;flex:1;min-width:80px}
 .domain-url{font-size:.71rem;color:var(--muted);font-family:'JetBrains Mono',monospace;width:100%}
 .check-btn{padding:6px 12px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent);border-radius:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:.74rem;cursor:pointer}
-
-/* OFFER */
 .offer-item{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--surface2);border-radius:9px;margin-bottom:7px;cursor:pointer}
 .offer-item.done{opacity:.5}
 .offer-item.done .offer-lbl{text-decoration:line-through}
 .offer-lbl{flex:1;font-size:.84rem}
-
-/* TABLE */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .time-tbl{width:100%;border-collapse:collapse;font-size:.81rem;min-width:500px}
 .time-tbl th{text-align:left;padding:10px 13px;color:var(--muted);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1.5px solid var(--border);font-weight:800;font-family:'Syne',sans-serif}
 .time-tbl td{padding:11px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
 .time-tbl tr:hover td{background:var(--surface2)}
-
-/* MEMBERS */
 .mli{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--surface2);border-radius:10px;margin-bottom:8px}
 .mli-info{flex:1;min-width:0}
 .mli-name{font-weight:700;font-size:.87rem;font-family:'Syne',sans-serif}
 .mli-role{color:var(--muted);font-size:.74rem;font-weight:600}
 .mli-pin{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:.76rem;flex-shrink:0}
-.mli-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:6px;font-size:.88rem;flex-shrink:0}
-
-/* MODAL */
+.mli-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:6px;font-size:.88rem}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:flex-end;justify-content:center;padding:0}
 @media(min-width:600px){.modal-overlay{align-items:center;padding:20px}}
 .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:28px 22px;width:100%;max-width:440px;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto}
@@ -192,30 +157,44 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
 .modal-btns{display:flex;gap:8px;margin-top:16px}
 .modal-cancel{flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer;color:var(--text)}
 .modal-ok{flex:1;padding:12px;background:var(--accent);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;cursor:pointer}
-
-/* TG PANEL */
 .tg-panel{background:rgba(42,171,238,.05);border:1px solid rgba(42,171,238,.18);border-radius:14px;padding:18px;margin-bottom:16px}
 .tg-panel h3{color:var(--tg);font-size:.9rem;font-weight:800;margin-bottom:8px;font-family:'Syne',sans-serif}
 .tg-panel p{color:var(--muted);font-size:.81rem;line-height:1.6}
 .tg-cmds{margin-top:11px;display:flex;flex-direction:column;gap:5px}
 .tg-cmd{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:8px;padding:8px 12px;font-size:.79rem;border:1px solid var(--border)}
 .tg-cmd code{font-family:'JetBrains Mono',monospace;color:var(--tg);font-weight:500;font-size:.83rem}
-
-/* MISC */
 .private-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(42,171,238,.08);color:var(--tg);border:1px solid rgba(42,171,238,.2);border-radius:7px;padding:4px 11px;font-size:.71rem;font-weight:700;margin-bottom:16px}
 .pdf-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:var(--accent2-dim);color:var(--accent2);border:1.5px solid var(--accent2);border-radius:9px;font-family:'Syne',sans-serif;font-weight:700;font-size:.81rem;cursor:pointer}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
-
-/* TEAM SWITCHER */
-.switcher-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:flex;align-items:flex-end;justify-content:center}
-@media(min-width:600px){.switcher-overlay{align-items:center;padding:20px}}
-.switcher-box{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:400px}
-@media(min-width:600px){.switcher-box{border-radius:20px}}
-.switcher-box h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:8px}
-.switcher-box p{color:var(--muted);font-size:.8rem;margin-bottom:14px}
-.team-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface2);border-radius:10px;margin-bottom:8px;cursor:pointer;border:1.5px solid transparent;font-weight:600;font-size:.87rem}
-.team-opt.current{border-color:var(--accent)}
-.team-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.switcher-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.switcher-box{background:var(--surface);border-radius:20px 20px 0 0;padding:28px 22px;width:100%;max-width:440px}
+.switcher-box h3{font-size:1rem;font-weight:800;margin-bottom:8px;font-family:'Syne',sans-serif}
+.switcher-box p{color:var(--muted);font-size:.83rem;margin-bottom:16px}
+.team-option-btn{width:100%;padding:13px 16px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;color:var(--text);margin-bottom:8px;text-align:left}
+.team-option-btn:hover{border-color:var(--accent)}
+/* CAMPAIGN TABLE */
+.camp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--border)}
+.camp-tbl{width:100%;border-collapse:collapse;font-size:.78rem;min-width:900px}
+.camp-tbl th{padding:10px 12px;text-align:left;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:2px solid var(--border);white-space:nowrap;font-family:'Syne',sans-serif}
+.camp-tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.camp-tbl tr:last-child td{border-bottom:none}
+.camp-tbl tr:hover td{background:var(--surface2)}
+.brand-header td{font-weight:800;font-size:.8rem;font-family:'Syne',sans-serif;padding:8px 12px;letter-spacing:1px}
+.status-active{background:var(--accent-dim);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap}
+.status-pending{background:var(--accent4-dim);color:var(--accent4);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap}
+.status-inactive{background:var(--surface2);color:var(--muted);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap}
+.camp-link{color:var(--tg);font-family:'JetBrains Mono',monospace;font-size:.72rem;text-decoration:none;white-space:nowrap}
+.camp-link:hover{text-decoration:underline}
+.camp-pixel{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+.camp-target{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;font-size:.8rem}
+.camp-revenue{font-family:'JetBrains Mono',monospace;color:var(--accent2);font-weight:600;font-size:.8rem}
+.edit-row-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 9px;border-radius:6px;font-size:.72rem;cursor:pointer}
+.edit-row-btn:hover{border-color:var(--accent);color:var(--accent)}
+.del-row-btn{background:none;border:none;color:var(--muted);padding:4px 7px;font-size:.8rem;cursor:pointer}
+.del-row-btn:hover{color:var(--danger)}
+.add-campaign-btn{padding:9px 16px;background:var(--accent-dim);color:var(--accent);border:1.5px solid var(--accent);border-radius:9px;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer}
+.total-row td{font-weight:800;background:var(--surface2);font-family:'Syne',sans-serif;font-size:.8rem}
+.readonly-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent2-dim);color:var(--accent2);border:1px solid rgba(124,107,255,.2);border-radius:6px;padding:3px 10px;font-size:.7rem;font-weight:700}
 </style>
 </head>
 <body>
@@ -237,59 +216,55 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
       <button class="btn btn-ghost" onclick="goLogin()">I've been here before</button>
     </div>
     <div class="step" id="step1">
-      <div class="step-icon">🤖</div>
-      <div class="step-title">Telegram Bot Included</div>
-      <div class="step-desc">Clock in/out and log stats directly from <strong>@teamflow_scale_bot</strong>.</div>
+      <div class="step-icon">👥</div>
+      <div class="step-title">5 Specialized Teams</div>
+      <div class="step-desc">Marketing, Safe Offers, ReSell, Sales and Warehouse — each with their own dashboard.</div>
       <button class="btn btn-green" onclick="obNext()">Next →</button>
     </div>
     <div class="step" id="step2">
-      <div class="step-icon">📊</div>
-      <div class="step-title">5 Teams, Full Control</div>
-      <div class="step-desc">Marketing, Safe Offers, ReSell, Sales and Warehouse — each with their own dashboard.</div>
-      <button class="btn btn-green" onclick="goLogin()">Open TeamFlow →</button>
+      <div class="step-icon">🤖</div>
+      <div class="step-title">Telegram Integrated</div>
+      <div class="step-desc">Clock in, report KPIs and get alerts directly in Telegram with @teamflow_scale_bot.</div>
+      <button class="btn btn-green" onclick="goLogin()">Let's Go →</button>
     </div>
   </div>
 </div>
 
 <!-- LOGIN -->
 <div class="screen" id="screenLogin">
-  <div class="card-wrap" style="text-align:left">
-    <div style="text-align:center;margin-bottom:28px">
-      <div class="logo">TeamFlow <span>Scale</span></div>
-      <div style="color:var(--muted);font-size:.82rem;margin-top:4px">Team operations & performance</div>
-    </div>
-    <label class="field-label">Select your team</label>
-    <select class="inp" id="memberSelect" style="cursor:pointer"></select>
-    <label class="field-label">PIN (4 digits)</label>
+  <div class="card-wrap">
+    <div class="logo">TF <span>Scale</span></div>
+    <label class="field-label">Your Team</label>
+    <select class="inp" id="memberSelect"></select>
+    <label class="field-label">Your PIN</label>
     <input class="inp" type="password" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric" onkeydown="if(event.key==='Enter')loginMember()">
-    <button class="btn btn-green" onclick="loginMember()">Sign In →</button>
+    <button class="btn btn-green" onclick="loginMember()">Enter →</button>
     <div class="divider">or</div>
-    <button class="btn btn-purple" onclick="showManagerLogin()">Manager / Admin</button>
-    <div class="tg-hint">🤖 <span>Telegram: <strong>@teamflow_scale_bot</strong></span></div>
+    <button class="btn btn-purple" onclick="showManagerLogin()">Manager Access</button>
   </div>
 </div>
 
 <!-- MANAGER LOGIN MODAL -->
-<div id="managerModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+<div class="modal-overlay" id="managerModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal">
-    <h3>Admin Login</h3>
+    <h3>Manager Access</h3>
     <label class="field-label">Admin PIN</label>
-    <input class="inp" type="password" id="adminPin" maxlength="6" placeholder="Admin PIN" inputmode="numeric" onkeydown="if(event.key==='Enter')loginManager()">
+    <input class="inp" type="password" id="adminPin" maxlength="4" placeholder="••••" inputmode="numeric" onkeydown="if(event.key==='Enter')loginManager()">
     <div class="modal-btns">
       <button class="modal-cancel" onclick="document.getElementById('managerModal').style.display='none'">Cancel</button>
-      <button class="modal-ok" onclick="loginManager()">Login</button>
+      <button class="modal-ok" onclick="loginManager()">Enter</button>
     </div>
   </div>
 </div>
 
 <!-- ADD MEMBER MODAL -->
-<div id="addMemberModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+<div class="modal-overlay" id="addMemberModal" style="display:none" onclick="if(event.target===this)closeAddMember()">
   <div class="modal">
-    <h3>Add Team Member</h3>
-    <label class="field-label">Full Name</label>
-    <input class="inp" id="newName" placeholder="e.g. Ana Kovač" style="width:100%;margin-bottom:10px">
+    <h3 id="addMemberTitle">Add Team Member</h3>
+    <label class="field-label">Name</label>
+    <input class="inp" id="newName" placeholder="Full name">
     <label class="field-label">Team</label>
-    <select class="inp" id="newTeam" style="cursor:pointer;margin-bottom:10px">
+    <select class="inp" id="newTeam">
       <option value="Marketing Team">Marketing Team</option>
       <option value="Safe Offers Team">Safe Offers Team</option>
       <option value="ReSell Team">ReSell Team</option>
@@ -297,23 +272,82 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
       <option value="Warehouse Team">Warehouse Team</option>
     </select>
     <label class="field-label">PIN (4 digits)</label>
-    <input class="inp" id="newPin" type="password" maxlength="4" placeholder="••••" inputmode="numeric" style="width:100%;margin-bottom:10px">
-    <label class="field-label">Telegram (without @)</label>
-    <input class="inp" id="newTg" placeholder="username" style="width:100%">
+    <input class="inp" id="newPin" type="number" placeholder="1234" maxlength="4">
+    <label class="field-label">Telegram @username (optional)</label>
+    <input class="inp" id="newTg" placeholder="@username">
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="document.getElementById('addMemberModal').style.display='none'">Cancel</button>
-      <button class="modal-ok" onclick="addMember()">Add Member</button>
+      <button class="modal-cancel" onclick="closeAddMember()">Cancel</button>
+      <button class="modal-ok" id="addMemberOk" onclick="addMember()">Add Member</button>
     </div>
   </div>
 </div>
 
 <!-- TEAM SWITCHER -->
-<div id="switcherOverlay" class="switcher-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+<div class="switcher-overlay" id="switcherOverlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
   <div class="switcher-box">
     <h3>Switch Team View</h3>
-    <p>Enter the PIN of the team you want to view.</p>
+    <p>Select a team and enter its PIN.</p>
     <div id="switcherOptions"></div>
     <button class="modal-cancel" style="width:100%;margin-top:4px" onclick="document.getElementById('switcherOverlay').style.display='none'">Cancel</button>
+  </div>
+</div>
+
+<!-- PIN CONFIRM MODAL -->
+<div class="modal-overlay" id="pinConfirmModal" style="display:none">
+  <div class="modal">
+    <h3 id="pinConfirmTitle">Enter PIN</h3>
+    <label class="field-label">PIN (4 digits)</label>
+    <input class="inp" type="password" id="pinConfirmInput" maxlength="4" placeholder="••••" inputmode="numeric" onkeydown="if(event.key==='Enter')confirmPinSwitch()">
+    <div id="pinConfirmError" style="color:var(--danger);font-size:.8rem;margin-top:-8px;margin-bottom:8px;display:none">Wrong PIN — try again</div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="document.getElementById('pinConfirmModal').style.display='none'">Cancel</button>
+      <button class="modal-ok" onclick="confirmPinSwitch()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGN MODAL -->
+<div class="modal-overlay" id="campaignModal" style="display:none" onclick="if(event.target===this)closeCampModal()">
+  <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto">
+    <h3 id="campModalTitle">Add Campaign</h3>
+    <label class="field-label">Brand</label>
+    <input class="inp" id="camp_brand" placeholder="e.g. Vitalix, VSmedic" style="width:100%;margin-bottom:10px">
+    <label class="field-label">Type</label>
+    <select class="inp" id="camp_type" style="cursor:pointer;margin-bottom:10px">
+      <option value="White cloaking site">White cloaking site</option>
+      <option value="Offer cloaking site">Offer cloaking site</option>
+      <option value="Direct offer no cloaking site">Direct offer no cloaking site</option>
+    </select>
+    <label class="field-label">Link</label>
+    <input class="inp" id="camp_link" placeholder="https://..." style="width:100%;margin-bottom:10px">
+    <label class="field-label">URL Campaign</label>
+    <input class="inp" id="camp_url_campaign" placeholder="e.g. 2+1 CIALIS / CLOAKING" style="width:100%;margin-bottom:10px">
+    <label class="field-label">UTM Campaign</label>
+    <input class="inp" id="camp_utm" placeholder="e.g. UTM - Keitaro" style="width:100%;margin-bottom:10px">
+    <label class="field-label">Offer Pixel</label>
+    <input class="inp" id="camp_pixel" placeholder="Pixel ID" style="width:100%;margin-bottom:10px">
+    <label class="field-label">Status</label>
+    <select class="inp" id="camp_status" style="cursor:pointer;margin-bottom:10px">
+      <option value="Active">Active</option>
+      <option value="Pending">Pending</option>
+      <option value="Inactive">Inactive</option>
+    </select>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label class="field-label">Daily Target €</label><input class="inp" id="camp_daily_target" placeholder="5000" type="number" style="width:100%;margin-bottom:0"></div>
+      <div><label class="field-label">Monthly Target €</label><input class="inp" id="camp_monthly_target" placeholder="100000" type="number" style="width:100%;margin-bottom:0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label class="field-label">Revenue MTD €</label><input class="inp" id="camp_revenue_mtd" placeholder="0" type="number" style="width:100%;margin-bottom:0"></div>
+      <div><label class="field-label">Conv. Rate %</label><input class="inp" id="camp_conv_rate" placeholder="0.0" type="number" step="0.1" style="width:100%;margin-bottom:0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label class="field-label">Active Campaigns</label><input class="inp" id="camp_active_campaigns" placeholder="0" type="number" style="width:100%;margin-bottom:0"></div>
+      <div><label class="field-label">Notes</label><input class="inp" id="camp_notes" placeholder="IT market - white offer" style="width:100%;margin-bottom:0"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeCampModal()">Cancel</button>
+      <button class="modal-ok" id="campModalOk" onclick="saveCampaign()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -324,15 +358,13 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="topbar-right">
       <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <div class="status-pill offline" id="statusPill">Offline</div>
-      <button class="switch-btn" id="switchBtn" onclick="showSwitcher()" style="display:none" id="switchBtn"></button>
+      <button class="switch-btn" id="switchBtn" onclick="showSwitcher()" style="display:none">Team</button>
       <div class="avatar" id="topAvatar"></div>
       <button class="logout-btn" onclick="logout()">Out</button>
     </div>
   </div>
   <div class="nav" id="navBar"></div>
   <div class="content">
-
-    <!-- TIME -->
     <div class="panel" id="panel-clock">
       <div class="card">
         <div class="clock-hero">
@@ -364,8 +396,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
       </div>
     </div>
-
-    <!-- TASKS -->
     <div class="panel" id="panel-tasks">
       <div class="private-tag">🔒 Private — only visible to you</div>
       <div class="card">
@@ -378,8 +408,6 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="todoList"></div>
       </div>
     </div>
-
-    <!-- DAILY -->
     <div class="panel" id="panel-daily">
       <div class="private-tag">🔒 Private — only visible to you</div>
       <div class="card">
@@ -393,11 +421,8 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="dailyList"></div>
       </div>
     </div>
-
-    <!-- KPI -->
     <div class="panel" id="panel-kpi"><div id="kpiContent"></div></div>
-
-    <!-- MEETINGS -->
+    <div class="panel" id="panel-campaigns"><div id="campaignContent"></div></div>
     <div class="panel" id="panel-meetings">
       <div class="card">
         <div class="section-header">
@@ -406,6 +431,14 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
             <div class="add-row" style="margin-bottom:0">
               <input class="add-inp" id="meetTimeIn" placeholder="14:00" style="max-width:70px">
               <input class="add-inp" id="meetTitleIn" placeholder="Title...">
+              <select class="pri-sel" id="meetTeamSel">
+                <option value="All">All Teams</option>
+                <option value="Marketing Team">Marketing</option>
+                <option value="Safe Offers Team">Safe Offers</option>
+                <option value="ReSell Team">ReSell</option>
+                <option value="Sales Team">Sales</option>
+                <option value="Warehouse Team">Warehouse</option>
+              </select>
               <button class="add-btn" onclick="addMeeting()">+</button>
             </div>
           </div>
@@ -413,21 +446,15 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="meetingList"></div>
       </div>
     </div>
-
-    <!-- TEAM (MGR) -->
     <div class="panel" id="panel-team">
       <div class="stats-row" id="mgrStats"></div>
       <div class="card-title" style="margin-bottom:12px">All Teams — Live</div>
       <div class="team-grid" id="teamGrid"></div>
     </div>
-
-    <!-- KPI OVERVIEW (MGR) -->
     <div class="panel" id="panel-kpioverview">
       <div class="stats-row" id="kpiGlobal"></div>
       <div id="kpiTeamRows"></div>
     </div>
-
-    <!-- TIME LOG (MGR) -->
     <div class="panel" id="panel-timelog">
       <div class="section-header">
         <div class="card-title" style="margin-bottom:0">Time Log</div>
@@ -440,12 +467,10 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         </table>
       </div>
     </div>
-
-    <!-- SETTINGS (MGR) -->
     <div class="panel" id="panel-settings">
       <div class="card">
         <div class="card-title">Team Management</div>
-        <button class="add-btn" style="margin-bottom:16px" onclick="document.getElementById('addMemberModal').style.display='flex'">+ Add Member</button>
+        <button class="add-btn" style="margin-bottom:16px" onclick="openAddMember()">+ Add Member</button>
         <div id="memberMgmtList"></div>
       </div>
       <div class="tg-panel">
@@ -458,40 +483,45 @@ body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-const TEAM_COLORS={'Marketing Team':'#00e5a0','Safe Offers Team':'#7c6bff','ReSell Team':'#ff6b35','Sales Team':'#f0c040','Warehouse Team':'#60a5fa'};
-const ADMIN_PIN='1234';
-const DEFAULT_MEMBERS=[
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+const TEAM_COLORS = {'Marketing Team':'#00e5a0','Safe Offers Team':'#7c6bff','ReSell Team':'#ff6b35','Sales Team':'#f0c040','Warehouse Team':'#60a5fa'};
+const ADMIN_PIN = '1234';
+const DEFAULT_MEMBERS = [
   {id:'m1',name:'Member 1',team:'Marketing Team',pin:'1111',tg:''},
   {id:'m2',name:'Member 2',team:'Safe Offers Team',pin:'2222',tg:''},
   {id:'m3',name:'Member 3',team:'ReSell Team',pin:'3333',tg:''},
   {id:'m4',name:'Member 4',team:'Sales Team',pin:'4444',tg:''},
   {id:'m5',name:'Member 5',team:'Warehouse Team',pin:'5555',tg:''},
 ];
-const DAILY_ROUTINES={
+const DAILY_ROUTINES = {
   'Marketing Team':['Ad account health check','Budget check per ad account','Website/landing page check','Launch campaigns on META','Create new creatives','Prepare assets (BM, ADS Power)','Identify winning ads (best ROAS)','Scaling check','Competitor check (FB Ad Library)','Audience refresh','Morning recap (spend, revenue, ROAS)','Daily targets check per brand','Pixel firing check','Keitaro stats check','Backup domain check','Landing page speed check'],
   'Safe Offers Team':['White Page setup & test','Cloaking setup & test','Offer Page check','Domain health check (SSL)','Pixel firing check','Keitaro stats check','IP/Bot filter check','Facebook Policy check','Backup domain check','Landing page speed check','Update domain table','New offer checklist'],
   'ReSell Team':['Review contact list for today','Check hold orders','Follow-up callbacks from yesterday','Contact existing customers','Update customer status','Track daily renewal targets','Mark dead leads','Daily recap (contacted, renewed, %)'],
   'Sales Team':['Review new orders (Shopify/WooCommerce)','Contact customers on WhatsApp','Confirm payment (COD or Card)','Approve or reject ALL orders','Check hold orders','Track unanswered orders','Blacklist check','EOD recap (orders, COD/Card, delivery rate)'],
   'Warehouse Team':['Receive approved orders','Print shipping labels','Pack orders','Check low stock items','EOD inventory update','Log returned orders','Log damaged items','Report unfulfilled orders'],
 };
-const OFFER_CHECKLIST=['White Page created & tested','Cloaking configured in Keitaro','Offer Page ready','Domain health check passed (SSL)','Pixel firing correctly','UTM parameters set','IP/Bot filters active','Facebook Policy compliant','Backup domain ready','Landing page speed OK','Domain table updated','Marketing Team notified'];
+const OFFER_CHECKLIST = ['White Page created & tested','Cloaking configured in Keitaro','Offer Page ready','Domain health check passed (SSL)','Pixel firing correctly','UTM parameters set','IP/Bot filters active','Facebook Policy compliant','Backup domain ready','Landing page speed OK','Domain table updated','Marketing Team notified'];
+const MARKETING_TABS = [{id:'clock',label:'⏱ Time'},{id:'tasks',label:'✅ Tasks'},{id:'daily',label:'📋 Daily'},{id:'kpi',label:'📊 KPIs'},{id:'campaigns',label:'🎯 Campaigns'},{id:'meetings',label:'📅 Meetings'}];
+const MEMBER_TABS = [{id:'clock',label:'⏱ Time'},{id:'tasks',label:'✅ Tasks'},{id:'daily',label:'📋 Daily'},{id:'kpi',label:'📊 KPIs'},{id:'meetings',label:'📅 Meetings'}];
+const MGR_TABS = [{id:'team',label:'👥 Teams'},{id:'kpioverview',label:'📊 KPIs'},{id:'timelog',label:'⏱ Log'},{id:'campaigns',label:'🎯 Campaigns'},{id:'meetings',label:'📅 Meetings'},{id:'settings',label:'⚙️ Settings'}];
 
+// ── STORAGE ────────────────────────────────────────────────────────────────
 function ls(key,def){try{const v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def}}
 function lsSet(key,val){try{localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
 
-let TEAM=ls('tf_members',DEFAULT_MEMBERS);
-let STATE=ls('tf_state',{});
-let MEETINGS=ls('tf_meetings',[]);
-let STOCK=ls('tf_stock',{});
-let DOMAINS=ls('tf_domains',[]);
-let OFFERS=ls('tf_offers',{});
-let KPI=ls('tf_kpi',{});
-let currentUser=null,isManager=false,clockInterval=null,obStep=0;
+let TEAM = ls('tf_members', DEFAULT_MEMBERS);
+let STATE = ls('tf_state', {});
+let MEETINGS = ls('tf_meetings', []);
+let STOCK = ls('tf_stock', {});
+let DOMAINS = ls('tf_domains', []);
+let OFFERS = ls('tf_offers', {});
+let KPI = ls('tf_kpi', {});
+let CAMPAIGNS = ls('tf_campaigns', []);
+let currentUser = null, isManager = false, clockInterval = null, obStep = 0, editingCampIdx = null, editingMemberId = null, pendingSwitchTeam = null;
 
 function saveState(){lsSet('tf_state',STATE)}
 function saveTeam(){lsSet('tf_members',TEAM)}
@@ -500,19 +530,21 @@ function saveStock(){lsSet('tf_stock',STOCK)}
 function saveDomains(){lsSet('tf_domains',DOMAINS)}
 function saveOffers(){lsSet('tf_offers',OFFERS)}
 function saveKPI(){lsSet('tf_kpi',KPI)}
+function saveCampaigns(){lsSet('tf_campaigns',CAMPAIGNS)}
 function getU(id){if(!STATE[id])STATE[id]={sessions:[],todos:[],daily:[],clockedIn:false,clockStart:null};return STATE[id]}
 function today(){return new Date().toISOString().slice(0,10)}
-function fmtMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`}
-function fmtDur(ms){const m=Math.floor(ms/60000);return`${Math.floor(m/60)}h ${m%60}m`}
-function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function fmtMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0')}
+function fmtDur(ms){const m=Math.floor(ms/60000);return Math.floor(m/60)+'h '+m%60+'m'}
+function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 function tc(t){return TEAM_COLORS[t]||'#6b7494'}
 function getKPI(uid){if(!KPI[uid])KPI[uid]={};if(!KPI[uid][today()])KPI[uid][today()]={};return KPI[uid][today()]}
 
+// ── THEME ──────────────────────────────────────────────────────────────────
 function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';lsSet('tf_theme',d?'light':'dark')}
 function initTheme(){const s=ls('tf_theme','dark');document.documentElement.setAttribute('data-theme',s);document.getElementById('themeBtn').textContent=s==='dark'?'🌙':'☀️'}
 
-// ONBOARDING
+// ── ONBOARDING ─────────────────────────────────────────────────────────────
 function obNext(){
   document.getElementById('step'+obStep).classList.remove('active');
   document.getElementById('dot'+obStep).classList.remove('active');
@@ -526,7 +558,744 @@ function goLogin(){
   document.getElementById('screenLogin').classList.add('active');
 }
 
-window.onload=function(){
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+function rebuildSelect(){
+  const sel = document.getElementById('memberSelect');
+  sel.innerHTML = '<option value="">— Select your team —</option>';
+  const seen = [];
+  TEAM.forEach(m => {
+    if(seen.indexOf(m.team) < 0){
+      seen.push(m.team);
+      const o = document.createElement('option');
+      o.value = m.team; o.textContent = m.team;
+      sel.appendChild(o);
+    }
+  });
+}
+function loginMember(){
+  const team = document.getElementById('memberSelect').value;
+  const pin = document.getElementById('pinInput').value;
+  if(!team){alert('Select your team');return}
+  if(!pin){alert('Enter your PIN');return}
+  const member = TEAM.find(m => m.team===team && m.pin===pin);
+  if(!member){
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').placeholder = 'Wrong PIN — try again';
+    return;
+  }
+  currentUser = member; isManager = false; startApp();
+}
+function showManagerLogin(){document.getElementById('managerModal').style.display='flex'}
+function loginManager(){
+  const pin = document.getElementById('adminPin').value;
+  if(pin !== ADMIN_PIN){alert('Wrong PIN');return}
+  currentUser = {id:'manager',name:'Manager',team:'Administrator'};
+  isManager = true;
+  document.getElementById('managerModal').style.display = 'none';
+  startApp();
+}
+function logout(){
+  if(clockInterval){clearInterval(clockInterval);clockInterval=null}
+  currentUser = null; isManager = false;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('screenLogin').classList.add('active');
+  document.getElementById('pinInput').value = '';
+  document.getElementById('adminPin').value = '';
+}
+
+// ── APP START ──────────────────────────────────────────────────────────────
+function startApp(){
+  document.getElementById('screenLogin').classList.remove('active');
+  document.getElementById('app').style.display = 'block';
+  const color = tc(currentUser.team);
+  const av = document.getElementById('topAvatar');
+  av.textContent = initials(currentUser.name);
+  av.style.cssText = 'background:'+color+'18;color:'+color+';border:1.5px solid '+color+'44;width:34px;height:34px;';
+  const sb = document.getElementById('switchBtn');
+  if(!isManager){
+    sb.style.display = 'block';
+    sb.textContent = currentUser.team.replace(' Team','');
+  } else {
+    sb.style.display = 'none';
+  }
+  if(!isManager){
+    const u = getU(currentUser.id);
+    if(u.daily.length === 0 && DAILY_ROUTINES[currentUser.team]){
+      u.daily = DAILY_ROUTINES[currentUser.team].map(r=>({text:r,doneDate:null}));
+      saveState();
+    }
+  }
+  buildNav();
+  if(!isManager){
+    activateTab('clock');
+    resumeClock(); renderSessions(); renderTodos(); renderDaily(); renderKPI(); renderCampaigns(); renderMeetings();
+  } else {
+    activateTab('team');
+    renderTeam(); renderTimeLog(); renderKPIOverview(); renderSettings(); renderCampaigns(); renderMeetings();
+    document.getElementById('meetingAddRow').style.display = 'block';
+  }
+}
+
+// ── NAV ────────────────────────────────────────────────────────────────────
+function buildNav(){
+  const bar = document.getElementById('navBar');
+  bar.innerHTML = '';
+  const tabs = isManager ? MGR_TABS : (currentUser.team==='Marketing Team'||currentUser.team==='Safe Offers Team') ? MARKETING_TABS : MEMBER_TABS;
+  tabs.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'nav-tab'; el.id = 'tab-'+t.id; el.textContent = t.label;
+    el.onclick = () => activateTab(t.id);
+    bar.appendChild(el);
+  });
+}
+function activateTab(id){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const tab = document.getElementById('tab-'+id);
+  const panel = document.getElementById('panel-'+id);
+  if(tab) tab.classList.add('active');
+  if(panel) panel.classList.add('active');
+}
+
+// ── CLOCK ──────────────────────────────────────────────────────────────────
+function resumeClock(){
+  const u = getU(currentUser.id);
+  if(u.clockedIn && u.clockStart){
+    document.getElementById('btnIn').disabled = true;
+    document.getElementById('btnOut').disabled = false;
+    document.getElementById('statusPill').className = 'status-pill online';
+    document.getElementById('statusPill').textContent = 'Online';
+    document.getElementById('clockMsg').textContent = 'Since '+fmtTime(u.clockStart);
+    clockInterval = setInterval(() => { updateClockNum(); renderSessions(); }, 1000);
+    updateClockNum();
+  }
+}
+function updateClockNum(){
+  const u = getU(currentUser.id);
+  if(!u.clockStart) return;
+  document.getElementById('clockNum').textContent = fmtMs(Date.now()-u.clockStart);
+}
+function clockIn(){
+  const u = getU(currentUser.id);
+  u.clockedIn = true; u.clockStart = Date.now();
+  saveState();
+  document.getElementById('btnIn').disabled = true;
+  document.getElementById('btnOut').disabled = false;
+  document.getElementById('statusPill').className = 'status-pill online';
+  document.getElementById('statusPill').textContent = 'Online';
+  document.getElementById('clockMsg').textContent = 'Since '+fmtTime(u.clockStart);
+  clockInterval = setInterval(() => { updateClockNum(); renderSessions(); }, 1000);
+}
+function clockOut(){
+  const u = getU(currentUser.id);
+  if(!u.clockStart) return;
+  if(clockInterval){clearInterval(clockInterval);clockInterval=null}
+  const session = {date:today(),start:u.clockStart,end:Date.now(),duration:Date.now()-u.clockStart,member:currentUser.name,team:currentUser.team,memberId:currentUser.id};
+  u.sessions.push(session); u.clockedIn = false; u.clockStart = null;
+  saveState();
+  document.getElementById('btnIn').disabled = false;
+  document.getElementById('btnOut').disabled = true;
+  document.getElementById('statusPill').className = 'status-pill offline';
+  document.getElementById('statusPill').textContent = 'Offline';
+  document.getElementById('clockMsg').textContent = 'Not clocked in';
+  document.getElementById('clockNum').textContent = '00:00:00';
+  renderSessions();
+}
+function renderSessions(){
+  const u = getU(currentUser.id);
+  const t = today();
+  const todaySess = u.sessions.filter(s=>s.date===t);
+  const cont = document.getElementById('sessionList');
+  if(!cont) return;
+  if(!todaySess.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No sessions yet.</p>';return}
+  cont.innerHTML = todaySess.map(s=>'<div class="session-row"><span class="mono">'+fmtTime(s.start)+'</span><span>→</span><span class="mono">'+fmtTime(s.end)+'</span><span class="dur">'+fmtDur(s.duration)+'</span></div>').join('');
+  const todayMs = todaySess.reduce((a,s)=>a+s.duration,0);
+  document.getElementById('todayTotal').textContent = fmtDur(todayMs);
+  document.getElementById('allSessions').textContent = u.sessions.length;
+}
+
+// ── TODOS ──────────────────────────────────────────────────────────────────
+function addTodo(){
+  const inp = document.getElementById('todoIn');
+  const text = inp.value.trim();
+  if(!text) return;
+  const u = getU(currentUser.id);
+  u.todos = u.todos||[];
+  u.todos.push({id:Date.now(),text,pri:document.getElementById('priSel').value,done:false});
+  saveState(); inp.value=''; renderTodos();
+}
+function toggleTodo(id){
+  const u = getU(currentUser.id);
+  const t = (u.todos||[]).find(t=>t.id===id);
+  if(t){t.done=!t.done;saveState();renderTodos();}
+}
+function deleteTodo(id){
+  const u = getU(currentUser.id);
+  u.todos = (u.todos||[]).filter(t=>t.id!==id);
+  saveState(); renderTodos();
+}
+function renderTodos(){
+  const u = getU(currentUser.id);
+  const todos = u.todos||[];
+  const cont = document.getElementById('todoList');
+  if(!cont) return;
+  if(!todos.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No tasks yet.</p>';return}
+  const priLabel = {h:'HIGH',m:'MED',l:'LOW'};
+  const priClass = {h:'ph',m:'pm',l:'pl'};
+  cont.innerHTML = todos.map(t=>'<div class="todo-item'+(t.done?' done':'')+'"><div class="chk'+(t.done?' on':'')+'" onclick="toggleTodo('+t.id+')">'+( t.done?'✓':'')+'</div><span class="todo-label" onclick="toggleTodo('+t.id+')">'+t.text+'</span><span class="pri-tag '+priClass[t.pri]+'">'+priLabel[t.pri]+'</span><button class="del-btn" onclick="deleteTodo('+t.id+')">✕</button></div>').join('');
+}
+
+// ── DAILY ──────────────────────────────────────────────────────────────────
+function addDaily(){
+  const inp = document.getElementById('dailyIn');
+  const text = inp.value.trim();
+  if(!text) return;
+  const u = getU(currentUser.id);
+  u.daily.push({text,doneDate:null});
+  saveState(); inp.value=''; renderDaily();
+}
+function toggleDaily(i){
+  const u = getU(currentUser.id);
+  u.daily[i].doneDate = u.daily[i].doneDate===today() ? null : today();
+  saveState(); renderDaily();
+}
+function renderDaily(){
+  const u = getU(currentUser.id);
+  const t = today();
+  const cont = document.getElementById('dailyList');
+  const dateEl = document.getElementById('dailyDate');
+  if(dateEl) dateEl.textContent = t;
+  if(!cont) return;
+  const done = u.daily.filter(d=>d.doneDate===t).length;
+  const total = u.daily.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const fill = document.getElementById('progFill');
+  const lbl = document.getElementById('progLbl');
+  if(fill) fill.style.width = pct+'%';
+  if(lbl) lbl.textContent = done+'/'+total;
+  if(!total){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No routines yet.</p>';return}
+  cont.innerHTML = u.daily.map((d,i)=>{
+    const isDone = d.doneDate===t;
+    return '<div class="daily-item'+(isDone?' done':'')+'" onclick="toggleDaily('+i+')"><div class="dchk'+(isDone?' on':'')+'">'+( isDone?'✓':'')+'</div><span class="daily-lbl">'+d.text+'</span></div>';
+  }).join('');
+}
+
+// ── KPI ────────────────────────────────────────────────────────────────────
+function renderKPI(){
+  const team = currentUser.team, uid = currentUser.id, kpi = getKPI(uid);
+  const cont = document.getElementById('kpiContent');
+  if(!cont) return;
+  const color = tc(team);
+  if(team === 'Marketing Team'){
+    cont.innerHTML = '<div class="card"><div class="card-title" style="color:'+color+'">Marketing KPIs — '+today()+'</div>'
+      +'<div class="metric-grid">'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--danger)">'+(kpi.spend||'—')+'</div><div class="metric-lbl">Spend €</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent)">'+(kpi.revenue||'—')+'</div><div class="metric-lbl">Revenue €</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent2)">'+(kpi.roas||'—')+'</div><div class="metric-lbl">ROAS</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent3);font-size:1.1rem">'+(kpi.account||'—')+'</div><div class="metric-lbl">Account</div></div>'
+      +'</div>'
+      +'<div class="input-row">'
+      +'<input class="metric-inp" id="k_spend" placeholder="Spend €" value="'+(kpi.spend||'')+'">'
+      +'<input class="metric-inp" id="k_revenue" placeholder="Revenue €" value="'+(kpi.revenue||'')+'">'
+      +'<input class="metric-inp" id="k_roas" placeholder="ROAS" value="'+(kpi.roas||'')+'">'
+      +'<input class="metric-inp" id="k_account" placeholder="Account" value="'+(kpi.account||'')+'">'
+      +'<button class="submit-btn" onclick="saveKpiMarketing()">Save</button>'
+      +'</div></div>'
+      +'<div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds">'
+      +'<div class="tg-cmd"><code>/recap 500 2000 4.0 AccountX</code></div>'
+      +'<div class="tg-cmd"><code>/checklinks</code></div>'
+      +'</div></div>';
+  } else if(team === 'Safe Offers Team'){
+    cont.innerHTML = '<div class="card"><div class="card-title" style="color:'+color+'">Domains</div>'
+      +'<div class="add-row">'
+      +'<input class="add-inp" id="d_brand" placeholder="Brand">'
+      +'<input class="add-inp" id="d_url" placeholder="https://...">'
+      +'<button class="add-btn" onclick="addDomain()">+</button>'
+      +'</div><div id="domainList"></div></div>'
+      +'<div class="card"><div class="card-title" style="color:'+color+'">New Offer Checklist</div>'
+      +'<div class="add-row">'
+      +'<input class="add-inp" id="offer_brand" placeholder="Brand name">'
+      +'<button class="add-btn" onclick="startOffer()">Start</button>'
+      +'</div><div id="offerList"></div></div>'
+      +'<div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds">'
+      +'<div class="tg-cmd"><code>/newoffer BrandX</code></div>'
+      +'<div class="tg-cmd"><code>/checklinks</code></div>'
+      +'</div></div>';
+    renderDomains(); renderOffers();
+  } else if(team === 'ReSell Team'){
+    cont.innerHTML = '<div class="card"><div class="card-title" style="color:'+color+'">ReSell KPIs — '+today()+'</div>'
+      +'<div class="metric-grid">'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent2)">'+(kpi.contacted||'—')+'</div><div class="metric-lbl">Contacted</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent)">'+(kpi.renewed||'—')+'</div><div class="metric-lbl">Renewed</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent3)">'+(kpi.contacted&&kpi.renewed?Math.round(kpi.renewed/kpi.contacted*100)+'%':'—')+'</div><div class="metric-lbl">Conversion</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent)">'+(kpi.revenue||'—')+'</div><div class="metric-lbl">Revenue €</div></div>'
+      +'</div>'
+      +'<div class="input-row">'
+      +'<input class="metric-inp" id="k_contacted" placeholder="Contacted" value="'+(kpi.contacted||'')+'">'
+      +'<input class="metric-inp" id="k_renewed" placeholder="Renewed" value="'+(kpi.renewed||'')+'">'
+      +'<input class="metric-inp" id="k_revenue" placeholder="Revenue €" value="'+(kpi.revenue||'')+'">'
+      +'<button class="submit-btn" onclick="saveKpiResell()">Save</button>'
+      +'</div></div>'
+      +'<div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds">'
+      +'<div class="tg-cmd"><code>/resell 45 12 2400</code></div>'
+      +'</div></div>';
+  } else if(team === 'Sales Team'){
+    cont.innerHTML = '<div class="card"><div class="card-title" style="color:'+color+'">Sales KPIs — '+today()+'</div>'
+      +'<div class="metric-grid">'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent2)">'+(kpi.total||'—')+'</div><div class="metric-lbl">Total Orders</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent)">'+(kpi.confirmed||'—')+'</div><div class="metric-lbl">Confirmed</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--danger)">'+(kpi.rejected||'—')+'</div><div class="metric-lbl">Rejected</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent4)">'+(kpi.cod||'—')+'</div><div class="metric-lbl">COD</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent2)">'+(kpi.card||'—')+'</div><div class="metric-lbl">Card</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent3)">'+(kpi.delivery||'—')+'</div><div class="metric-lbl">Delivery %</div></div>'
+      +'</div>'
+      +'<div class="input-row">'
+      +'<input class="metric-inp" id="k_total" placeholder="Total" value="'+(kpi.total||'')+'">'
+      +'<input class="metric-inp" id="k_confirmed" placeholder="Confirmed" value="'+(kpi.confirmed||'')+'">'
+      +'<input class="metric-inp" id="k_rejected" placeholder="Rejected" value="'+(kpi.rejected||'')+'">'
+      +'<input class="metric-inp" id="k_cod" placeholder="COD" value="'+(kpi.cod||'')+'">'
+      +'<input class="metric-inp" id="k_card" placeholder="Card" value="'+(kpi.card||'')+'">'
+      +'<input class="metric-inp" id="k_delivery" placeholder="Delivery %" value="'+(kpi.delivery||'')+'">'
+      +'<button class="submit-btn" onclick="saveKpiSales()">Save</button>'
+      +'</div></div>'
+      +'<div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds">'
+      +'<div class="tg-cmd"><code>/orders 45 38 7 25 13</code></div>'
+      +'<div class="tg-cmd"><code>/delivery 92</code></div>'
+      +'</div></div>';
+  } else if(team === 'Warehouse Team'){
+    cont.innerHTML = '<div class="card"><div class="card-title" style="color:'+color+'">Warehouse KPIs — '+today()+'</div>'
+      +'<div class="metric-grid">'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent)">'+(kpi.shipped||'—')+'</div><div class="metric-lbl">Shipped</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--accent3)">'+(kpi.returned||'—')+'</div><div class="metric-lbl">Returned</div></div>'
+      +'<div class="metric-box"><div class="metric-val" style="color:var(--danger)">'+(kpi.unfulfilled||'—')+'</div><div class="metric-lbl">Unfulfilled</div></div>'
+      +'</div>'
+      +'<div class="input-row">'
+      +'<input class="metric-inp" id="k_shipped" placeholder="Shipped" value="'+(kpi.shipped||'')+'">'
+      +'<input class="metric-inp" id="k_returned" placeholder="Returned" value="'+(kpi.returned||'')+'">'
+      +'<input class="metric-inp" id="k_unfulfilled" placeholder="Unfulfilled" value="'+(kpi.unfulfilled||'')+'">'
+      +'<button class="submit-btn" onclick="saveKpiWarehouse()">Save</button>'
+      +'</div></div>'
+      +'<div class="card"><div class="card-title" style="color:'+color+'">Stock</div>'
+      +'<div class="add-row">'
+      +'<input class="add-inp" id="s_product" placeholder="Product">'
+      +'<input class="add-inp" id="s_qty" placeholder="Qty" style="max-width:70px">'
+      +'<input class="add-inp" id="s_max" placeholder="Max" style="max-width:70px">'
+      +'<button class="add-btn" onclick="addStock()">+</button>'
+      +'</div><div id="stockList"></div></div>'
+      +'<div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds">'
+      +'<div class="tg-cmd"><code>/shipped 85 5 3</code></div>'
+      +'<div class="tg-cmd"><code>/stock ProductX 50</code></div>'
+      +'</div></div>';
+    renderStock();
+  }
+}
+function saveKpiMarketing(){const kpi=getKPI(currentUser.id);kpi.spend=document.getElementById('k_spend').value;kpi.revenue=document.getElementById('k_revenue').value;kpi.roas=document.getElementById('k_roas').value;kpi.account=document.getElementById('k_account').value;saveKPI();renderKPI()}
+function saveKpiResell(){const kpi=getKPI(currentUser.id);kpi.contacted=parseInt(document.getElementById('k_contacted').value)||0;kpi.renewed=parseInt(document.getElementById('k_renewed').value)||0;kpi.revenue=document.getElementById('k_revenue').value;saveKPI();renderKPI()}
+function saveKpiSales(){const kpi=getKPI(currentUser.id);kpi.total=document.getElementById('k_total').value;kpi.confirmed=document.getElementById('k_confirmed').value;kpi.rejected=document.getElementById('k_rejected').value;kpi.cod=document.getElementById('k_cod').value;kpi.card=document.getElementById('k_card').value;kpi.delivery=document.getElementById('k_delivery').value;saveKPI();renderKPI()}
+function saveKpiWarehouse(){const kpi=getKPI(currentUser.id);kpi.shipped=document.getElementById('k_shipped').value;kpi.returned=document.getElementById('k_returned').value;kpi.unfulfilled=document.getElementById('k_unfulfilled').value;saveKPI();renderKPI();renderStock()}
+
+// ── DOMAINS ────────────────────────────────────────────────────────────────
+function addDomain(){
+  const brand=document.getElementById('d_brand').value.trim(),url=document.getElementById('d_url').value.trim();
+  if(!brand||!url)return;
+  DOMAINS.push({brand,url,status:'unknown',added:today()});
+  saveDomains();renderDomains();
+  document.getElementById('d_brand').value='';document.getElementById('d_url').value='';
+}
+function checkDomain(i){
+  DOMAINS[i].status='checking';renderDomains();
+  fetch(DOMAINS[i].url,{method:'HEAD',mode:'no-cors'}).then(()=>{DOMAINS[i].status='ok';saveDomains();renderDomains()}).catch(()=>{DOMAINS[i].status='error';saveDomains();renderDomains()});
+}
+function deleteDomain(i){DOMAINS.splice(i,1);saveDomains();renderDomains()}
+function renderDomains(){
+  const cont=document.getElementById('domainList');
+  if(!cont)return;
+  const cl={'ok':'var(--accent)','error':'var(--danger)','checking':'var(--accent4)','unknown':'var(--muted)'};
+  cont.innerHTML=DOMAINS.length?DOMAINS.map((d,i)=>'<div class="domain-item"><div class="domain-status" style="background:'+cl[d.status]+'"></div><div class="domain-name">'+d.brand+'</div><button class="check-btn" onclick="checkDomain('+i+')">Check</button><button class="del-btn" onclick="deleteDomain('+i+')">✕</button><div class="domain-url">'+d.url+'</div></div>').join(''):'<p style="color:var(--muted);font-size:.83rem">No domains yet.</p>';
+}
+
+// ── OFFERS ─────────────────────────────────────────────────────────────────
+function startOffer(){
+  const brand=document.getElementById('offer_brand').value.trim();
+  if(!brand)return;
+  const key=brand+'_'+Date.now();
+  OFFERS[key]={brand,date:today(),checklist:new Array(OFFER_CHECKLIST.length).fill(false)};
+  saveOffers();renderOffers();document.getElementById('offer_brand').value='';
+}
+function toggleOfferItem(key,i){
+  if(OFFERS[key]){OFFERS[key].checklist[i]=!OFFERS[key].checklist[i];saveOffers();renderOffers();}
+}
+function renderOffers(){
+  const cont=document.getElementById('offerList');
+  if(!cont)return;
+  const offers=Object.entries(OFFERS).filter(([k,o])=>o.date===today());
+  if(!offers.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No offers today.</p>';return}
+  cont.innerHTML=offers.map(([key,offer])=>{
+    const done=offer.checklist.filter(Boolean).length;
+    return '<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>'+offer.brand+'</strong><span style="color:var(--muted);font-size:.79rem">'+done+'/'+OFFER_CHECKLIST.length+'</span></div>'
+      +OFFER_CHECKLIST.map((item,i)=>'<div class="offer-item'+(offer.checklist[i]?' done':'')+'" onclick="toggleOfferItem(\''+key+'\','+i+')"><div class="dchk'+(offer.checklist[i]?' on':'')+'">'+( offer.checklist[i]?'✓':'')+'</div><span class="offer-lbl">'+item+'</span></div>').join('')+'</div>';
+  }).join('');
+}
+
+// ── STOCK ──────────────────────────────────────────────────────────────────
+function addStock(){
+  const p=document.getElementById('s_product').value.trim(),q=parseInt(document.getElementById('s_qty').value)||0,m=parseInt(document.getElementById('s_max').value)||100;
+  if(!p)return;
+  STOCK[p]={qty:q,max:m};saveStock();renderStock();
+  document.getElementById('s_product').value='';document.getElementById('s_qty').value='';document.getElementById('s_max').value='';
+}
+function renderStock(){
+  const cont=document.getElementById('stockList');
+  if(!cont)return;
+  if(!Object.keys(STOCK).length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No products yet.</p>';return}
+  cont.innerHTML=Object.entries(STOCK).map(([name,s])=>{
+    const pct=Math.min(100,Math.round(s.qty/s.max*100));
+    const color=s.qty<10?'var(--danger)':s.qty<30?'var(--accent4)':'var(--accent)';
+    return '<div class="stock-item"><div class="stock-name">'+name+'</div><div class="stock-bar-wrap"><div class="stock-bar" style="width:'+pct+'%;background:'+color+'"></div></div><div class="stock-qty" style="color:'+color+'">'+s.qty+'</div></div>';
+  }).join('');
+}
+
+// ── MEETINGS ───────────────────────────────────────────────────────────────
+function addMeeting(){
+  const time=document.getElementById('meetTimeIn').value.trim(),title=document.getElementById('meetTitleIn').value.trim();
+  if(!time||!title)return;
+  const teamSel=document.getElementById('meetTeamSel');const meetTeam=isManager&&teamSel?teamSel.value:currentUser.team;
+  MEETINGS.push({id:Date.now(),date:today(),time,title,team:meetTeam});
+  saveMeetings();renderMeetings();
+  document.getElementById('meetTimeIn').value='';document.getElementById('meetTitleIn').value='';
+}
+function deleteMeeting(id){MEETINGS=MEETINGS.filter(m=>m.id!==id);saveMeetings();renderMeetings()}
+function renderMeetings(){
+  const cont=document.getElementById('meetingList');
+  if(!cont)return;
+  const t=today();
+  const todayM=MEETINGS.filter(m=>m.date===t&&(isManager||m.team==='All'||m.team===currentUser.team)).sort((a,b)=>a.time.localeCompare(b.time));
+  if(!todayM.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No meetings today.</p>';return}
+  cont.innerHTML=todayM.map(m=>'<div class="meeting-item"><div class="meeting-time">'+m.time+'</div><div><div class="meeting-title">'+m.title+'</div><div class="meeting-team" style="color:'+(m.team==='All'?'var(--muted)':tc(m.team))+'">'+m.team+'</div></div>'+(isManager?'<button class="del-btn" onclick="deleteMeeting('+m.id+')">✕</button>':'')+'</div>').join('');
+}
+
+// ── SWITCH TEAM ────────────────────────────────────────────────────────────
+function showSwitcher(){
+  const overlay=document.getElementById('switcherOverlay');
+  const opts=document.getElementById('switcherOptions');
+  const teams=[...new Set(TEAM.map(m=>m.team))];
+  opts.innerHTML=teams.map(t=>'<button class="team-option-btn" onclick="initSwitchTeam(\''+t+'\')" style="border-left:3px solid '+tc(t)+'">'+t+'</button>').join('');
+  overlay.style.display='flex';
+}
+function initSwitchTeam(team){
+  if(team===currentUser.team){document.getElementById('switcherOverlay').style.display='none';return}
+  pendingSwitchTeam=team;
+  document.getElementById('switcherOverlay').style.display='none';
+  document.getElementById('pinConfirmTitle').textContent='Enter PIN for '+team;
+  document.getElementById('pinConfirmInput').value='';
+  document.getElementById('pinConfirmError').style.display='none';
+  document.getElementById('pinConfirmModal').style.display='flex';
+  setTimeout(()=>document.getElementById('pinConfirmInput').focus(),100);
+}
+function confirmPinSwitch(){
+  const pin=document.getElementById('pinConfirmInput').value;
+  const team=pendingSwitchTeam;
+  if(!pin||!team)return;
+  const member=TEAM.find(m=>m.team===team && m.pin===pin);
+  if(!member){
+    document.getElementById('pinConfirmInput').value='';
+    document.getElementById('pinConfirmError').style.display='block';
+    return;
+  }
+  document.getElementById('pinConfirmModal').style.display='none';
+  currentUser=member;
+  document.getElementById('switchBtn').textContent=team.replace(' Team','');
+  const color=tc(team);
+  const av=document.getElementById('topAvatar');
+  av.textContent=initials(member.name);
+  av.style.cssText='background:'+color+'18;color:'+color+';border:1.5px solid '+color+'44;width:34px;height:34px;';
+  const u=getU(currentUser.id);
+  if(u.daily.length===0&&DAILY_ROUTINES[team]){u.daily=DAILY_ROUTINES[team].map(r=>({text:r,doneDate:null}));saveState()}
+  buildNav();
+  activateTab('clock');
+  resumeClock();renderSessions();renderTodos();renderDaily();renderKPI();renderCampaigns();renderMeetings();
+  pendingSwitchTeam=null;
+}
+
+// ── MANAGER PANELS ─────────────────────────────────────────────────────────
+function renderTeam(){
+  const grid=document.getElementById('teamGrid');
+  const stats=document.getElementById('mgrStats');
+  if(!grid)return;
+  const online=TEAM.filter(m=>{const u=getU(m.id);return u.clockedIn});
+  stats.innerHTML='<div class="stat-box"><div class="stat-num" style="color:var(--accent)">'+TEAM.length+'</div><div class="stat-lbl">Members</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent2)">'+online.length+'</div><div class="stat-lbl">Online</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent3)">'+MEETINGS.filter(m=>m.date===today()).length+'</div><div class="stat-lbl">Meetings Today</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent4)">5</div><div class="stat-lbl">Teams</div></div>';
+  grid.innerHTML=TEAM.map(m=>{
+    const u=getU(m.id);
+    const color=tc(m.team);
+    const isOnline=u.clockedIn;
+    const todaySess=u.sessions.filter(s=>s.date===today());
+    const totalMs=todaySess.reduce((a,s)=>a+s.duration,0);
+    const todayDone=(u.daily||[]).filter(d=>d.doneDate===today()).length;
+    const todayTotal=(u.daily||[]).length;
+    return '<div class="member-card" style="border-color:'+color+'33">'
+      +'<div class="mc-head"><div class="avatar" style="background:'+color+'18;color:'+color+';border:1.5px solid '+color+'33;width:40px;height:40px;font-family:\'Syne\',sans-serif;font-weight:800">'+initials(m.name)+'</div>'
+      +'<div><div class="mc-name">'+m.name+'</div><div class="mc-team" style="color:'+color+'">'+m.team+'</div></div>'
+      +'<div class="status-pill '+(isOnline?'online':'offline')+'" style="margin-left:auto">'+(isOnline?'Online':'Offline')+'</div>'
+      +'</div>'
+      +'<div class="mc-stats">'
+      +'<div class="mc-stat"><div class="sl">Today</div><div class="sv" style="color:var(--accent)">'+(totalMs?fmtDur(totalMs):'—')+'</div></div>'
+      +'<div class="mc-stat"><div class="sl">Daily</div><div class="sv" style="color:var(--accent2)">'+todayDone+'/'+todayTotal+'</div></div>'
+      +'</div></div>';
+  }).join('');
+}
+function renderTimeLog(){
+  const tbody=document.getElementById('timeTbody');
+  if(!tbody)return;
+  const allSessions=[];
+  TEAM.forEach(m=>{const u=getU(m.id);(u.sessions||[]).forEach(s=>allSessions.push({...s,memberName:m.name,memberTeam:m.team}))});
+  allSessions.sort((a,b)=>b.start-a.start);
+  if(!allSessions.length){tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">No sessions yet.</td></tr>';return}
+  tbody.innerHTML=allSessions.map(s=>'<tr><td style="font-weight:600">'+s.memberName+'</td><td><span style="color:'+tc(s.memberTeam)+';font-size:.75rem;font-weight:700">'+s.memberTeam+'</span></td><td>'+s.date+'</td><td class="mono">'+fmtTime(s.start)+'</td><td class="mono">'+fmtTime(s.end)+'</td><td class="dur">'+fmtDur(s.duration)+'</td></tr>').join('');
+}
+function renderKPIOverview(){
+  const global=document.getElementById('kpiGlobal');
+  const rows=document.getElementById('kpiTeamRows');
+  if(!global||!rows)return;
+  const teams=Object.keys(TEAM_COLORS);
+  global.innerHTML='<div class="stat-box"><div class="stat-num" style="color:var(--accent)">'+TEAM.length+'</div><div class="stat-lbl">Members</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent2)">'+teams.length+'</div><div class="stat-lbl">Teams</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent3)">'+TEAM.filter(m=>{const u=getU(m.id);return u.clockedIn}).length+'</div><div class="stat-lbl">Online</div></div>'
+    +'<div class="stat-box"><div class="stat-num" style="color:var(--accent4)">'+MEETINGS.filter(m=>m.date===today()).length+'</div><div class="stat-lbl">Meetings</div></div>';
+  rows.innerHTML=teams.map(team=>{
+    const members=TEAM.filter(m=>m.team===team);
+    const color=tc(team);
+    return '<div class="card" style="border-left:3px solid '+color+'">'
+      +'<div class="card-title" style="color:'+color+'">'+team+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:8px">'
+      +members.map(m=>{
+        const u=getU(m.id);
+        const kpi=getKPI(m.id);
+        const todaySess=(u.sessions||[]).filter(s=>s.date===today());
+        const totalMs=todaySess.reduce((a,s)=>a+s.duration,0);
+        return '<div style="background:var(--surface2);border-radius:10px;padding:12px;min-width:140px">'
+          +'<div style="font-weight:700;font-size:.85rem;margin-bottom:6px">'+m.name+'</div>'
+          +'<div style="font-size:.78rem;color:var(--muted)">Time: <span style="color:var(--accent)">'+(totalMs?fmtDur(totalMs):'—')+'</span></div>'
+          +(u.clockedIn?'<div style="font-size:.72rem;color:var(--accent);margin-top:3px">● Online</div>':'')
+          +'</div>';
+      }).join('')
+      +'</div></div>';
+  }).join('');
+}
+function renderSettings(){
+  const list=document.getElementById('memberMgmtList');
+  if(!list)return;
+  list.innerHTML=TEAM.map(m=>{
+    const color=tc(m.team);
+    return '<div class="mli">'
+      +'<div class="avatar" style="width:36px;height:36px;background:'+color+'18;color:'+color+';border:1.5px solid '+color+'33;font-family:\'Syne\',sans-serif;font-weight:800;flex-shrink:0">'+initials(m.name)+'</div>'
+      +'<div class="mli-info"><div class="mli-name">'+m.name+'</div><div class="mli-role" style="color:'+color+'">'+m.team+(m.tg?' · @'+m.tg:'')+'</div></div>'
+      +'<span class="mli-pin">PIN: '+m.pin+'</span>'
+      +'<button class="check-btn" style="margin-right:6px;font-size:.72rem" onclick="openEditMember(\''+m.id+'\')">✏️</button>'
+      +'<button class="mli-del" onclick="deleteMember(\''+m.id+'\')">🗑</button>'
+      +'</div>';
+  }).join('');
+}
+function openAddMember(){
+  editingMemberId=null;
+  document.getElementById('addMemberTitle').textContent='Add Team Member';
+  document.getElementById('addMemberOk').textContent='Add Member';
+  document.getElementById('addMemberOk').onclick=addMember;
+  ['newName','newPin','newTg'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addMemberModal').style.display='flex';
+}
+function openEditMember(id){
+  editingMemberId=id;
+  const m=TEAM.find(m=>m.id===id);
+  if(!m)return;
+  document.getElementById('addMemberTitle').textContent='Edit Member';
+  document.getElementById('addMemberOk').textContent='Save Changes';
+  document.getElementById('addMemberOk').onclick=saveEditMember;
+  document.getElementById('newName').value=m.name;
+  document.getElementById('newTeam').value=m.team;
+  document.getElementById('newPin').value=m.pin;
+  document.getElementById('newTg').value=m.tg||'';
+  document.getElementById('addMemberModal').style.display='flex';
+}
+function addMember(){
+  const name=document.getElementById('newName').value.trim();
+  const team=document.getElementById('newTeam').value;
+  const pin=String(document.getElementById('newPin').value).trim();
+  const tg=document.getElementById('newTg').value.trim();
+  if(!name||!team||pin.length!==4){alert('Fill all fields. PIN must be 4 digits.');return}
+  TEAM.push({id:'m'+Date.now(),name,team,pin,tg});
+  saveTeam();closeAddMember();rebuildSelect();renderSettings();
+}
+function saveEditMember(){
+  const name=document.getElementById('newName').value.trim();
+  const team=document.getElementById('newTeam').value;
+  const pin=String(document.getElementById('newPin').value).trim();
+  const tg=document.getElementById('newTg').value.trim();
+  if(!name||!team||pin.length!==4){alert('Fill all fields. PIN must be 4 digits.');return}
+  const idx=TEAM.findIndex(m=>m.id===editingMemberId);
+  if(idx>=0){TEAM[idx]={...TEAM[idx],name,team,pin,tg};}
+  saveTeam();closeAddMember();rebuildSelect();renderSettings();
+}
+function closeAddMember(){
+  document.getElementById('addMemberModal').style.display='none';
+  editingMemberId=null;
+}
+function deleteMember(id){
+  if(!confirm('Delete this member?'))return;
+  TEAM=TEAM.filter(m=>m.id!==id);
+  saveTeam();rebuildSelect();renderSettings();
+}
+
+// ── PDF ────────────────────────────────────────────────────────────────────
+function exportPDF(){
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF();
+    doc.setFontSize(16);doc.text('TeamFlow Scale — Time Log',14,20);
+    doc.setFontSize(10);
+    let y=35;
+    const allSessions=[];
+    TEAM.forEach(m=>{const u=getU(m.id);(u.sessions||[]).forEach(s=>allSessions.push({...s,memberName:m.name,memberTeam:m.team}))});
+    allSessions.sort((a,b)=>b.start-a.start);
+    allSessions.forEach(s=>{
+      if(y>270){doc.addPage();y=20}
+      doc.text(s.memberName+' | '+s.memberTeam+' | '+s.date+' | '+fmtTime(s.start)+'-'+fmtTime(s.end)+' | '+fmtDur(s.duration),14,y);
+      y+=7;
+    });
+    doc.save('timelog.pdf');
+  }catch(e){alert('PDF export failed: '+e.message)}
+}
+
+// ── CAMPAIGNS ──────────────────────────────────────────────────────────────
+if(CAMPAIGNS.length===0){
+  CAMPAIGNS=[
+    {brand:'Vitalix',type:'White cloaking site',link:'https://vitaitaly.online',url_campaign:'2+1 CIALIS / CLOAKING',utm:'UTM - Keitaro',pixel:'16188121423533349',status:'Active',daily_target:5000,monthly_target:100000,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:'IT market - white offer'},
+    {brand:'Vitalix',type:'Offer cloaking site',link:'https://vitait.com/it-it',url_campaign:'COLLECTION / CLOAKING',utm:'UTM - Keitaro',pixel:'16188121423533349',status:'Active',daily_target:5000,monthly_target:100000,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:''},
+    {brand:'Vitalix',type:'Direct offer no cloaking site',link:'https://itavitalix.com/landing/c21/',url_campaign:'',utm:'',pixel:'',status:'Pending',daily_target:0,monthly_target:0,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:'IT market - direct offer'},
+    {brand:'VSmedic',type:'White cloaking site',link:'https://vsmarket.online',url_campaign:'2+1 CIALIS / CLOAKING',utm:'UTM - Keitaro',pixel:'9101901119785554',status:'Active',daily_target:5000,monthly_target:100000,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:'IT market - white offer'},
+    {brand:'VSmedic',type:'Offer cloaking site',link:'vsmarket.info',url_campaign:'COLLECTION / CLOAKING',utm:'UTM - Keitaro',pixel:'9101901119785554',status:'Active',daily_target:5000,monthly_target:100000,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:''},
+    {brand:'VSmedic',type:'Direct offer no cloaking site',link:'https://vsitaly.com/landing/c21/',url_campaign:'',utm:'',pixel:'',status:'Pending',daily_target:0,monthly_target:0,revenue_mtd:0,conv_rate:0,active_campaigns:0,notes:'IT market - direct offer'}
+  ];
+  saveCampaigns();
+}
+function renderCampaigns(){
+  const cont=document.getElementById('campaignContent');
+  if(!cont)return;
+  const canEdit=isManager||(currentUser&&currentUser.team==='Safe Offers Team');
+  const brands=[...new Set(CAMPAIGNS.map(c=>c.brand))];
+  const totalDaily=CAMPAIGNS.reduce((a,c)=>a+(c.daily_target||0),0);
+  const totalMonthly=CAMPAIGNS.reduce((a,c)=>a+(c.monthly_target||0),0);
+  const totalRevenue=CAMPAIGNS.reduce((a,c)=>a+(c.revenue_mtd||0),0);
+  const brandColors={Vitalix:'#7c6bff',VSmedic:'#00e5a0',PharmX:'#ff6b35'};
+  const editBtn=canEdit?'<button class="add-campaign-btn" onclick="openAddCampaign()">+ Add Campaign</button>':'<span class="readonly-badge">👁 Read Only</span>';
+  const extraCol=canEdit?'<th></th>':'';
+  let html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">'
+    +'<div><div style="font-family:\'Syne\',sans-serif;font-weight:800;font-size:1rem">🎯 Campaign Overview</div>'
+    +'<div style="color:var(--muted);font-size:.78rem;margin-top:3px">ALL BRANDS</div></div>'
+    +'<div>'+editBtn+'</div></div>'
+    +'<div class="camp-wrap"><table class="camp-tbl"><thead><tr>'
+    +'<th>Brand</th><th>Type</th><th>Link</th><th>URL Campaign</th>'
+    +'<th>UTM</th><th>Pixel</th><th>Status</th>'
+    +'<th>Daily €</th><th>Monthly €</th><th>Revenue MTD</th>'
+    +'<th>Conv %</th><th>Active</th><th>Notes</th>'+extraCol
+    +'</tr></thead><tbody>';
+  brands.forEach(function(brand){
+    const color=brandColors[brand]||'#f0c040';
+    const colspan=canEdit?14:13;
+    html+='<tr class="brand-header"><td colspan="'+colspan+'" style="background:'+color+'18;color:'+color+';border-left:3px solid '+color+'">'+brand.toUpperCase()+'</td></tr>';
+    CAMPAIGNS.forEach(function(c,gi){
+      if(c.brand!==brand)return;
+      const sc=c.status==='Active'?'status-active':c.status==='Pending'?'status-pending':'status-inactive';
+      const linkHtml=c.link?'<a href="'+(c.link.startsWith('http')?c.link:'https://'+c.link)+'" target="_blank" class="camp-link">'+c.link.replace('https://','').replace('http://','').substring(0,22)+'</a>':'-';
+      const actions=canEdit?'<td><button class="edit-row-btn" onclick="openEditCampaign('+gi+')">✏️</button><button class="del-row-btn" onclick="deleteCampaign('+gi+')">✕</button></td>':'';
+      html+='<tr>'
+        +'<td style="color:'+color+';font-weight:600">'+c.brand+'</td>'
+        +'<td style="color:var(--muted);font-size:.75rem">'+c.type+'</td>'
+        +'<td>'+linkHtml+'</td>'
+        +'<td style="font-weight:600;font-size:.75rem">'+(c.url_campaign||'-')+'</td>'
+        +'<td style="font-size:.75rem;color:var(--muted)">'+(c.utm||'-')+'</td>'
+        +'<td class="camp-pixel">'+(c.pixel?c.pixel.substring(0,14)+'...':'-')+'</td>'
+        +'<td><span class="'+sc+'">'+c.status+'</span></td>'
+        +'<td class="camp-target">'+(c.daily_target?'€'+c.daily_target.toLocaleString():'-')+'</td>'
+        +'<td class="camp-target" style="color:var(--accent3)">'+(c.monthly_target?'€'+c.monthly_target.toLocaleString():'-')+'</td>'
+        +'<td class="camp-revenue">€'+(c.revenue_mtd||0).toLocaleString()+'</td>'
+        +'<td style="color:var(--muted)">'+(c.conv_rate?c.conv_rate+'%':'-')+'</td>'
+        +'<td style="color:var(--muted)">'+(c.active_campaigns||'-')+'</td>'
+        +'<td style="color:var(--muted);font-size:.74rem">'+(c.notes||'-')+'</td>'
+        +actions+'</tr>';
+    });
+  });
+  html+='<tr class="total-row"><td colspan="7" style="text-align:right;padding-right:16px">TOTAL</td>'
+    +'<td class="camp-target">€'+totalDaily.toLocaleString()+'</td>'
+    +'<td class="camp-target" style="color:var(--accent3)">€'+totalMonthly.toLocaleString()+'</td>'
+    +'<td class="camp-revenue">€'+totalRevenue.toLocaleString()+'</td>'
+    +'<td colspan="'+(canEdit?4:3)+'"></td></tr>';
+  html+='</tbody></table></div>';
+  cont.innerHTML=html;
+}
+function openAddCampaign(){
+  editingCampIdx=null;
+  document.getElementById('campModalTitle').textContent='+ Add Campaign';
+  document.getElementById('campModalOk').textContent='Add Campaign';
+  ['camp_brand','camp_link','camp_url_campaign','camp_utm','camp_pixel','camp_notes'].forEach(id=>document.getElementById(id).value='');
+  ['camp_daily_target','camp_monthly_target','camp_revenue_mtd','camp_conv_rate','camp_active_campaigns'].forEach(id=>document.getElementById(id).value='0');
+  document.getElementById('camp_status').value='Active';
+  document.getElementById('camp_type').value='White cloaking site';
+  document.getElementById('campaignModal').style.display='flex';
+}
+function openEditCampaign(idx){
+  editingCampIdx=idx;
+  const c=CAMPAIGNS[idx];
+  document.getElementById('campModalTitle').textContent='Edit Campaign';
+  document.getElementById('campModalOk').textContent='Save Changes';
+  document.getElementById('camp_brand').value=c.brand||'';
+  document.getElementById('camp_type').value=c.type||'White cloaking site';
+  document.getElementById('camp_link').value=c.link||'';
+  document.getElementById('camp_url_campaign').value=c.url_campaign||'';
+  document.getElementById('camp_utm').value=c.utm||'';
+  document.getElementById('camp_pixel').value=c.pixel||'';
+  document.getElementById('camp_status').value=c.status||'Active';
+  document.getElementById('camp_daily_target').value=c.daily_target||0;
+  document.getElementById('camp_monthly_target').value=c.monthly_target||0;
+  document.getElementById('camp_revenue_mtd').value=c.revenue_mtd||0;
+  document.getElementById('camp_conv_rate').value=c.conv_rate||0;
+  document.getElementById('camp_active_campaigns').value=c.active_campaigns||0;
+  document.getElementById('camp_notes').value=c.notes||'';
+  document.getElementById('campaignModal').style.display='flex';
+}
+function saveCampaign(){
+  const c={
+    brand:document.getElementById('camp_brand').value.trim(),
+    type:document.getElementById('camp_type').value,
+    link:document.getElementById('camp_link').value.trim(),
+    url_campaign:document.getElementById('camp_url_campaign').value.trim(),
+    utm:document.getElementById('camp_utm').value.trim(),
+    pixel:document.getElementById('camp_pixel').value.trim(),
+    status:document.getElementById('camp_status').value,
+    daily_target:parseFloat(document.getElementById('camp_daily_target').value)||0,
+    monthly_target:parseFloat(document.getElementById('camp_monthly_target').value)||0,
+    revenue_mtd:parseFloat(document.getElementById('camp_revenue_mtd').value)||0,
+    conv_rate:parseFloat(document.getElementById('camp_conv_rate').value)||0,
+    active_campaigns:parseInt(document.getElementById('camp_active_campaigns').value)||0,
+    notes:document.getElementById('camp_notes').value.trim()
+  };
+  if(!c.brand){document.getElementById('camp_brand').focus();return}
+  if(editingCampIdx!==null){CAMPAIGNS[editingCampIdx]=c;}else{CAMPAIGNS.push(c);}
+  saveCampaigns();closeCampModal();renderCampaigns();
+}
+function deleteCampaign(idx){
+  if(!confirm('Delete this campaign?'))return;
+  CAMPAIGNS.splice(idx,1);saveCampaigns();renderCampaigns();
+}
+function closeCampModal(){
+  document.getElementById('campaignModal').style.display='none';
+  editingCampIdx=null;
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+window.onload = function(){
   initTheme();
   if(ls('tf_ob_done',false)){
     document.getElementById('screenOb').classList.remove('active');
@@ -535,168 +1304,14 @@ window.onload=function(){
   rebuildSelect();
 };
 
-function rebuildSelect(){
-  const sel=document.getElementById('memberSelect');
-  sel.innerHTML='<option value="">— Select your team —</option>';
-  TEAM.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.team;sel.appendChild(o)});
-}
-
-function loginMember(){
-  const id=document.getElementById('memberSelect').value,pin=document.getElementById('pinInput').value;
-  if(!id){alert('Select your team');return}
-  const member=TEAM.find(m=>m.id===id);
-  if(!member||pin!==member.pin){alert('Wrong PIN');return}
-  currentUser=member;isManager=false;startApp();
-}
-function showManagerLogin(){document.getElementById('managerModal').style.display='flex'}
-function loginManager(){
-  const pin=document.getElementById('adminPin').value;
-  if(pin!==ADMIN_PIN){alert('Wrong PIN');return}
-  currentUser={id:'manager',name:'Manager',team:'Administrator',color:'#6b7494'};
-  isManager=true;document.getElementById('managerModal').style.display='none';startApp();
-}
-function logout(){
-  if(clockInterval){clearInterval(clockInterval);clockInterval=null}
-  currentUser=null;isManager=false;
-  document.getElementById('app').style.display='none';
-  document.getElementById('screenLogin').classList.add('active');
-  document.getElementById('pinInput').value='';document.getElementById('adminPin').value='';
-}
-
-function startApp(){
-  document.getElementById('screenLogin').classList.remove('active');
-  document.getElementById('app').style.display='block';
-  const color=tc(currentUser.team);
-  const av=document.getElementById('topAvatar');
-  av.textContent=initials(currentUser.name);
-  av.style.cssText=`background:${color}18;color:${color};border:1.5px solid ${color}44;width:34px;height:34px;`;
-  const sb=document.getElementById('switchBtn');
-  if(!isManager){
-    sb.style.display='block';
-    sb.textContent=currentUser.team.replace(' Team','');
-  } else {
-    sb.style.display='none';
+setInterval(function(){
+  if(isManager){
+    const active=document.querySelector('.panel.active');
+    if(active&&active.id==='panel-team')renderTeam();
+    if(active&&active.id==='panel-timelog')renderTimeLog();
+    if(active&&active.id==='panel-kpioverview')renderKPIOverview();
   }
-  // Auto-populate daily routines
-  if(!isManager){
-    const u=getU(currentUser.id);
-    if(u.daily.length===0&&DAILY_ROUTINES[currentUser.team]){
-      u.daily=DAILY_ROUTINES[currentUser.team].map(r=>({text:r,doneDate:null}));
-      saveState();
-    }
-  }
-  buildNav();
-  if(!isManager){activateTab('clock');resumeClock();renderSessions();renderTodos();renderDaily();renderKPI();renderMeetings()}
-  else{activateTab('team');renderTeam();renderTimeLog();renderKPIOverview();renderSettings();renderMeetings();document.getElementById('meetingAddRow').style.display='block'}
-}
-
-// NAV
-const MEMBER_TABS=[{id:'clock',label:'⏱ Time'},{id:'tasks',label:'✅ Tasks'},{id:'daily',label:'📋 Daily'},{id:'kpi',label:'📊 KPIs'},{id:'meetings',label:'📅 Meetings'}];
-const MGR_TABS=[{id:'team',label:'👥 Teams'},{id:'kpioverview',label:'📊 KPIs'},{id:'timelog',label:'⏱ Log'},{id:'meetings',label:'📅 Meetings'},{id:'settings',label:'⚙️ Settings'}];
-function buildNav(){const bar=document.getElementById('navBar');bar.innerHTML='';(isManager?MGR_TABS:MEMBER_TABS).forEach(t=>{const el=document.createElement('div');el.className='nav-tab';el.id='tab-'+t.id;el.textContent=t.label;el.onclick=()=>activateTab(t.id);bar.appendChild(el)})}
-function activateTab(id){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+id)?.classList.add('active');document.getElementById('panel-'+id)?.classList.add('active')}
-
-// CLOCK
-function resumeClock(){const u=getU(currentUser.id);if(u.clockedIn&&u.clockStart){document.getElementById('btnIn').disabled=true;document.getElementById('btnOut').disabled=false;document.getElementById('statusPill').className='status-pill online';document.getElementById('statusPill').textContent='Online';document.getElementById('clockMsg').textContent='Since '+fmtTime(u.clockStart);clockInterval=setInterval(()=>{updateClockNum();renderSessions()},1000);updateClockNum()}}
-function updateClockNum(){const u=getU(currentUser.id);if(!u.clockStart)return;document.getElementById('clockNum').textContent=fmtMs(Date.now()-u.clockStart)}
-function clockIn(){const u=getU(currentUser.id);u.clockedIn=true;u.clockStart=Date.now();saveState();document.getElementById('btnIn').disabled=true;document.getElementById('btnOut').disabled=false;document.getElementById('statusPill').className='status-pill online';document.getElementById('statusPill').textContent='Online';document.getElementById('clockMsg').textContent='Since '+fmtTime(u.clockStart);clockInterval=setInterval(()=>{updateClockNum();renderSessions()},1000)}
-function clockOut(){const u=getU(currentUser.id);const end=Date.now(),dur=end-u.clockStart;u.sessions.push({date:today(),start:u.clockStart,end,dur});u.clockedIn=false;u.clockStart=null;saveState();clearInterval(clockInterval);clockInterval=null;document.getElementById('clockNum').textContent='00:00:00';document.getElementById('btnIn').disabled=false;document.getElementById('btnOut').disabled=true;document.getElementById('statusPill').className='status-pill offline';document.getElementById('statusPill').textContent='Offline';document.getElementById('clockMsg').textContent='Done. '+fmtDur(dur);renderSessions()}
-function renderSessions(){const u=getU(currentUser.id);const ts=u.sessions.filter(s=>s.date===today());const list=document.getElementById('sessionList');list.innerHTML=ts.length?ts.map(s=>`<div class="session-row"><span style="color:var(--muted);font-size:.75rem">${s.date}</span><span class="mono">${fmtTime(s.start)} → ${fmtTime(s.end)}</span><span class="dur">${fmtDur(s.dur)}</span></div>`).join(''):'<p style="color:var(--muted);font-size:.82rem">No sessions yet.</p>';const todayMs=ts.reduce((a,s)=>a+s.dur,0)+(u.clockedIn&&u.clockStart?Date.now()-u.clockStart:0);document.getElementById('todayTotal').textContent=fmtDur(todayMs);document.getElementById('allSessions').textContent=u.sessions.length}
-
-// TODOS
-function addTodo(){const inp=document.getElementById('todoIn'),pri=document.getElementById('priSel').value;const text=inp.value.trim();if(!text)return;getU(currentUser.id).todos.push({id:Date.now(),text,pri,done:false});saveState();inp.value='';renderTodos()}
-function toggleTodo(id){const t=getU(currentUser.id).todos.find(t=>t.id===id);if(t){t.done=!t.done;saveState();renderTodos()}}
-function deleteTodo(id){const u=getU(currentUser.id);u.todos=u.todos.filter(t=>t.id!==id);saveState();renderTodos()}
-function renderTodos(){const u=getU(currentUser.id);const cont=document.getElementById('todoList');if(!u.todos.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem;padding:4px 0">No tasks yet.</p>';return}const pl={h:'High',m:'Med',l:'Low'},pc={h:'ph',m:'pm',l:'pl'};cont.innerHTML=u.todos.map(t=>`<div class="todo-item ${t.done?'done':''}"><div class="chk ${t.done?'on':''}" onclick="toggleTodo(${t.id})">${t.done?'✓':''}</div><span class="todo-label" onclick="toggleTodo(${t.id})">${t.text}</span><span class="pri-tag ${pc[t.pri]}">${pl[t.pri]}</span><button class="del-btn" onclick="deleteTodo(${t.id})">✕</button></div>`).join('')}
-
-// DAILY
-function addDaily(){const inp=document.getElementById('dailyIn'),text=inp.value.trim();if(!text)return;getU(currentUser.id).daily.push({id:Date.now(),text,doneDate:null});saveState();inp.value='';renderDaily()}
-function toggleDaily(i){const u=getU(currentUser.id);const d=u.daily[i];if(d){d.doneDate=d.doneDate===today()?null:today();saveState();renderDaily()}}
-function renderDaily(){const u=getU(currentUser.id),t=today();document.getElementById('dailyDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});const done=u.daily.filter(d=>d.doneDate===t).length,total=u.daily.length;document.getElementById('progLbl').textContent=`${done}/${total}`;document.getElementById('progFill').style.width=total?(done/total*100)+'%':'0%';const cont=document.getElementById('dailyList');if(!u.daily.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No routines yet.</p>';return}cont.innerHTML=u.daily.map((d,i)=>{const isDone=d.doneDate===t;return`<div class="daily-item ${isDone?'done':''}" onclick="toggleDaily(${i})"><div class="dchk ${isDone?'on':''}">${isDone?'✓':''}</div><span class="daily-lbl">${d.text}</span></div>`}).join('')}
-
-// KPI
-function renderKPI(){
-  const team=currentUser.team,uid=currentUser.id,kpi=getKPI(uid);
-  const cont=document.getElementById('kpiContent');
-  const color=tc(team);
-  if(team==='Marketing Team'){
-    cont.innerHTML=`<div class="card"><div class="card-title" style="color:${color}">Marketing KPIs — ${today()}</div><div class="metric-grid"><div class="metric-box"><div class="metric-val" style="color:var(--danger)">${kpi.spend||'—'}</div><div class="metric-lbl">Spend €</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent)">${kpi.revenue||'—'}</div><div class="metric-lbl">Revenue €</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent2)">${kpi.roas||'—'}</div><div class="metric-lbl">ROAS</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent3);font-size:1.1rem">${kpi.account||'—'}</div><div class="metric-lbl">Account</div></div></div><div class="input-row"><input class="metric-inp" id="k_spend" placeholder="Spend €" value="${kpi.spend||''}"><input class="metric-inp" id="k_revenue" placeholder="Revenue €" value="${kpi.revenue||''}"><input class="metric-inp" id="k_roas" placeholder="ROAS" value="${kpi.roas||''}"><input class="metric-inp" id="k_account" placeholder="Account" value="${kpi.account||''}"><button class="submit-btn" onclick="saveKpiMarketing()">Save</button></div></div><div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/recap 500 2000 4.0 AccountX</code></div><div class="tg-cmd"><code>/checklinks</code></div></div></div>`;
-  }else if(team==='Safe Offers Team'){
-    cont.innerHTML=`<div class="card"><div class="card-title" style="color:${color}">Domains</div><div class="add-row"><input class="add-inp" id="d_brand" placeholder="Brand"><input class="add-inp" id="d_url" placeholder="https://..."><button class="add-btn" onclick="addDomain()">+</button></div><div id="domainList"></div></div><div class="card"><div class="card-title" style="color:${color}">New Offer Checklist</div><div class="add-row"><input class="add-inp" id="offer_brand" placeholder="Brand name"><button class="add-btn" onclick="startOffer()">Start</button></div><div id="offerList"></div></div><div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/newoffer BrandX</code></div><div class="tg-cmd"><code>/checklinks</code></div></div></div>`;
-    renderDomains();renderOffers();
-  }else if(team==='ReSell Team'){
-    cont.innerHTML=`<div class="card"><div class="card-title" style="color:${color}">ReSell KPIs — ${today()}</div><div class="metric-grid"><div class="metric-box"><div class="metric-val" style="color:var(--accent2)">${kpi.contacted||'—'}</div><div class="metric-lbl">Contacted</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent)">${kpi.renewed||'—'}</div><div class="metric-lbl">Renewed</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent3)">${kpi.contacted&&kpi.renewed?Math.round(kpi.renewed/kpi.contacted*100)+'%':'—'}</div><div class="metric-lbl">Conversion</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent)">${kpi.revenue||'—'}</div><div class="metric-lbl">Revenue €</div></div></div><div class="input-row"><input class="metric-inp" id="k_contacted" placeholder="Contacted" value="${kpi.contacted||''}"><input class="metric-inp" id="k_renewed" placeholder="Renewed" value="${kpi.renewed||''}"><input class="metric-inp" id="k_revenue" placeholder="Revenue €" value="${kpi.revenue||''}"><button class="submit-btn" onclick="saveKpiResell()">Save</button></div></div><div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/resell 45 12 2400</code></div></div></div>`;
-  }else if(team==='Sales Team'){
-    cont.innerHTML=`<div class="card"><div class="card-title" style="color:${color}">Sales KPIs — ${today()}</div><div class="metric-grid"><div class="metric-box"><div class="metric-val" style="color:var(--accent2)">${kpi.total||'—'}</div><div class="metric-lbl">Total Orders</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent)">${kpi.confirmed||'—'}</div><div class="metric-lbl">Confirmed</div></div><div class="metric-box"><div class="metric-val" style="color:var(--danger)">${kpi.rejected||'—'}</div><div class="metric-lbl">Rejected</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent4)">${kpi.cod||'—'}</div><div class="metric-lbl">COD</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent2)">${kpi.card||'—'}</div><div class="metric-lbl">Card</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent3)">${kpi.delivery||'—'}</div><div class="metric-lbl">Delivery %</div></div></div><div class="input-row"><input class="metric-inp" id="k_total" placeholder="Total" value="${kpi.total||''}"><input class="metric-inp" id="k_confirmed" placeholder="Confirmed" value="${kpi.confirmed||''}"><input class="metric-inp" id="k_rejected" placeholder="Rejected" value="${kpi.rejected||''}"><input class="metric-inp" id="k_cod" placeholder="COD" value="${kpi.cod||''}"><input class="metric-inp" id="k_card" placeholder="Card" value="${kpi.card||''}"><input class="metric-inp" id="k_delivery" placeholder="Delivery %" value="${kpi.delivery||''}"><button class="submit-btn" onclick="saveKpiSales()">Save</button></div></div><div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/orders 45 38 7 25 13</code></div><div class="tg-cmd"><code>/delivery 92</code></div></div></div>`;
-  }else if(team==='Warehouse Team'){
-    cont.innerHTML=`<div class="card"><div class="card-title" style="color:${color}">Warehouse KPIs — ${today()}</div><div class="metric-grid"><div class="metric-box"><div class="metric-val" style="color:var(--accent)">${kpi.shipped||'—'}</div><div class="metric-lbl">Shipped</div></div><div class="metric-box"><div class="metric-val" style="color:var(--accent3)">${kpi.returned||'—'}</div><div class="metric-lbl">Returned</div></div><div class="metric-box"><div class="metric-val" style="color:var(--danger)">${kpi.unfulfilled||'—'}</div><div class="metric-lbl">Unfulfilled</div></div></div><div class="input-row"><input class="metric-inp" id="k_shipped" placeholder="Shipped" value="${kpi.shipped||''}"><input class="metric-inp" id="k_returned" placeholder="Returned" value="${kpi.returned||''}"><input class="metric-inp" id="k_unfulfilled" placeholder="Unfulfilled" value="${kpi.unfulfilled||''}"><button class="submit-btn" onclick="saveKpiWarehouse()">Save</button></div></div><div class="card"><div class="card-title" style="color:${color}">Stock</div><div class="add-row"><input class="add-inp" id="s_product" placeholder="Product"><input class="add-inp" id="s_qty" placeholder="Qty" style="max-width:70px"><input class="add-inp" id="s_max" placeholder="Max" style="max-width:70px"><button class="add-btn" onclick="addStock()">+</button></div><div id="stockList"></div></div><div class="tg-panel"><h3>Telegram</h3><div class="tg-cmds"><div class="tg-cmd"><code>/shipped 85 5 3</code></div><div class="tg-cmd"><code>/stock ProductX 50</code></div></div></div>`;
-    renderStock();
-  }
-}
-
-function saveKpiMarketing(){const kpi=getKPI(currentUser.id);kpi.spend=document.getElementById('k_spend')?.value;kpi.revenue=document.getElementById('k_revenue')?.value;kpi.roas=document.getElementById('k_roas')?.value;kpi.account=document.getElementById('k_account')?.value;saveKPI();renderKPI()}
-function saveKpiResell(){const kpi=getKPI(currentUser.id);kpi.contacted=parseInt(document.getElementById('k_contacted')?.value)||0;kpi.renewed=parseInt(document.getElementById('k_renewed')?.value)||0;kpi.revenue=document.getElementById('k_revenue')?.value;saveKPI();renderKPI()}
-function saveKpiSales(){const kpi=getKPI(currentUser.id);kpi.total=document.getElementById('k_total')?.value;kpi.confirmed=document.getElementById('k_confirmed')?.value;kpi.rejected=document.getElementById('k_rejected')?.value;kpi.cod=document.getElementById('k_cod')?.value;kpi.card=document.getElementById('k_card')?.value;kpi.delivery=document.getElementById('k_delivery')?.value;saveKPI();renderKPI()}
-function saveKpiWarehouse(){const kpi=getKPI(currentUser.id);kpi.shipped=document.getElementById('k_shipped')?.value;kpi.returned=document.getElementById('k_returned')?.value;kpi.unfulfilled=document.getElementById('k_unfulfilled')?.value;saveKPI();renderKPI();renderStock()}
-
-// DOMAINS
-function addDomain(){const brand=document.getElementById('d_brand')?.value.trim(),url=document.getElementById('d_url')?.value.trim();if(!brand||!url)return;DOMAINS.push({brand,url,status:'unknown',added:today()});saveDomains();renderDomains();document.getElementById('d_brand').value='';document.getElementById('d_url').value=''}
-function checkDomain(i){DOMAINS[i].status='checking';renderDomains();fetch(DOMAINS[i].url,{method:'HEAD',mode:'no-cors'}).then(()=>{DOMAINS[i].status='ok';saveDomains();renderDomains()}).catch(()=>{DOMAINS[i].status='error';saveDomains();renderDomains()})}
-function deleteDomain(i){DOMAINS.splice(i,1);saveDomains();renderDomains()}
-function renderDomains(){const cont=document.getElementById('domainList');if(!cont)return;const cl={'ok':'var(--accent)','error':'var(--danger)','checking':'var(--accent4)','unknown':'var(--muted)'};cont.innerHTML=DOMAINS.length?DOMAINS.map((d,i)=>`<div class="domain-item"><div class="domain-status" style="background:${cl[d.status]}"></div><div class="domain-name">${d.brand}</div><button class="check-btn" onclick="checkDomain(${i})">Check</button><button class="del-btn" onclick="deleteDomain(${i})">✕</button><div class="domain-url">${d.url}</div></div>`).join(''):'<p style="color:var(--muted);font-size:.83rem">No domains yet.</p>'}
-
-// OFFERS
-function startOffer(){const brand=document.getElementById('offer_brand')?.value.trim();if(!brand)return;const key=`${brand}_${Date.now()}`;OFFERS[key]={brand,date:today(),checklist:new Array(OFFER_CHECKLIST.length).fill(false)};saveOffers();renderOffers();document.getElementById('offer_brand').value=''}
-function toggleOfferItem(key,i){if(OFFERS[key]){OFFERS[key].checklist[i]=!OFFERS[key].checklist[i];saveOffers();renderOffers()}}
-function renderOffers(){const cont=document.getElementById('offerList');if(!cont)return;const offers=Object.entries(OFFERS).filter(([k,o])=>o.date===today());if(!offers.length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No offers today.</p>';return}cont.innerHTML=offers.map(([key,offer])=>{const done=offer.checklist.filter(Boolean).length;return`<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${offer.brand}</strong><span style="color:var(--muted);font-size:.79rem">${done}/${OFFER_CHECKLIST.length}</span></div>${OFFER_CHECKLIST.map((item,i)=>`<div class="offer-item ${offer.checklist[i]?'done':''}" onclick="toggleOfferItem('${key}',${i})"><div class="dchk ${offer.checklist[i]?'on':''}">${offer.checklist[i]?'✓':''}</div><span class="offer-lbl">${item}</span></div>`).join('')}</div>`}).join('')}
-
-// STOCK
-function addStock(){const p=document.getElementById('s_product')?.value.trim(),q=parseInt(document.getElementById('s_qty')?.value)||0,m=parseInt(document.getElementById('s_max')?.value)||100;if(!p)return;STOCK[p]={qty:q,max:m};saveStock();renderStock();document.getElementById('s_product').value='';document.getElementById('s_qty').value='';document.getElementById('s_max').value=''}
-function renderStock(){const cont=document.getElementById('stockList');if(!cont)return;if(!Object.keys(STOCK).length){cont.innerHTML='<p style="color:var(--muted);font-size:.83rem">No products yet.</p>';return}cont.innerHTML=Object.entries(STOCK).map(([name,s])=>{const pct=Math.min(100,Math.round(s.qty/s.max*100));const color=s.qty<10?'var(--danger)':s.qty<30?'var(--accent4)':'var(--accent)';return`<div class="stock-item"><div class="stock-name">${name}</div><div class="stock-bar-wrap"><div class="stock-bar" style="width:${pct}%;background:${color}"></div></div><div class="stock-qty" style="color:${color}">${s.qty}</div></div>`}).join('')}
-
-// MEETINGS
-function addMeeting(){const time=document.getElementById('meetTimeIn')?.value.trim(),title=document.getElementById('meetTitleIn')?.value.trim();if(!time||!title)return;MEETINGS.push({time,title,team:'All',date:today()});saveMeetings();renderMeetings();document.getElementById('meetTimeIn').value='';document.getElementById('meetTitleIn').value=''}
-function deleteMeeting(i){MEETINGS.splice(i,1);saveMeetings();renderMeetings()}
-function renderMeetings(){const cont=document.getElementById('meetingList');const todayM=MEETINGS.filter(m=>m.date===today()).sort((a,b)=>a.time.localeCompare(b.time));cont.innerHTML=todayM.length?todayM.map((m,i)=>`<div class="meeting-item"><div class="meeting-time">${m.time}</div><div><div class="meeting-title">${m.title}</div><div class="meeting-team">${m.team}</div></div>${isManager?`<button class="del-btn" onclick="deleteMeeting(${MEETINGS.indexOf(m)})">🗑</button>`:''}</div>`).join(''):'<p style="color:var(--muted);font-size:.83rem;padding:10px 0">No meetings today.</p>'}
-
-// SWITCH TEAM
-function showSwitcher(){
-  const opts=document.getElementById('switcherOptions');
-  opts.innerHTML=Object.keys(TEAM_COLORS).map(t=>`<div class="team-opt ${currentUser.team===t?'current':''}" onclick="switchTeam('${t}')"><div class="team-dot" style="background:${tc(t)}"></div><span style="flex:1">${t}</span>${currentUser.team===t?'<span style="color:var(--accent);font-size:.73rem;font-weight:700">Active</span>':'<span style="color:var(--muted);font-size:.73rem">PIN req.</span>'}</div>`).join('');
-  document.getElementById('switcherOverlay').style.display='flex';
-}
-function switchTeam(team){
-  if(team===currentUser.team){document.getElementById('switcherOverlay').style.display='none';return}
-  const member=TEAM.find(m=>m.team===team);
-  if(!member){alert('No member for this team.');return}
-  const pin=prompt(`Enter PIN for ${team}:`);
-  if(!pin)return;
-  if(pin!==member.pin){alert('Wrong PIN!');return}
-  currentUser.team=team;
-  document.getElementById('switchBtn').textContent=team.replace(' Team','');
-  const color=tc(team);
-  document.getElementById('topAvatar').style.cssText=`background:${color}18;color:${color};border:1.5px solid ${color}44;width:34px;height:34px;`;
-  document.getElementById('switcherOverlay').style.display='none';
-  const u=getU(currentUser.id);
-  if(u.daily.length===0&&DAILY_ROUTINES[team]){u.daily=DAILY_ROUTINES[team].map(r=>({text:r,doneDate:null}));saveState()}
-  renderKPI();renderDaily();
-}
-
-// MANAGER
-function renderTeam(){const t=today();const online=TEAM.filter(m=>getU(m.id).clockedIn).length;document.getElementById('mgrStats').innerHTML=`<div class="stat-box"><div class="stat-num" style="color:var(--accent)">${online}</div><div class="stat-lbl">Online</div></div><div class="stat-box"><div class="stat-num" style="color:var(--accent2)">${TEAM.length}</div><div class="stat-lbl">Members</div></div><div class="stat-box"><div class="stat-num" style="color:var(--accent3)">${TEAM.reduce((a,m)=>a+getU(m.id).todos.filter(x=>x.done).length,0)}</div><div class="stat-lbl">Tasks Done</div></div><div class="stat-box"><div class="stat-num" style="color:var(--accent4)">${MEETINGS.filter(m=>m.date===t).length}</div><div class="stat-lbl">Meetings</div></div>`;document.getElementById('teamGrid').innerHTML=TEAM.map(m=>{const u=getU(m.id),isOn=u.clockedIn,color=tc(m.team);const todayMs=u.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.dur,0)+(isOn&&u.clockStart?Date.now()-u.clockStart:0);const dT=u.todos.filter(x=>x.done).length,aT=u.todos.length;const kpi=KPI[m.id]?.[t]||{};return`<div class="member-card"><div class="mc-head"><div class="avatar" style="width:38px;height:38px;font-size:.75rem;background:${color}18;color:${color};border:1.5px solid ${color}44;font-family:'Syne',sans-serif;font-weight:800">${initials(m.name)}</div><div><div class="mc-name">${m.name}</div><div class="mc-team" style="color:${color}">● ${m.team}</div></div><div style="margin-left:auto;font-size:.71rem;font-weight:700;color:${isOn?'var(--accent)':'var(--muted)'};font-family:'Syne',sans-serif">${isOn?'Online':'Offline'}</div></div><div class="mc-stats"><div class="mc-stat"><div class="sl">Today</div><div class="sv" style="color:var(--accent)">${fmtDur(todayMs)}</div></div><div class="mc-stat"><div class="sl">Tasks</div><div class="sv" style="color:var(--accent2)">${dT}/${aT}</div></div><div class="mc-stat"><div class="sl">Routines</div><div class="sv" style="color:var(--accent3)">${u.daily.filter(d=>d.doneDate===t).length}/${u.daily.length}</div></div><div class="mc-stat"><div class="sl">Sessions</div><div class="sv" style="color:var(--accent4)">${u.sessions.filter(s=>s.date===t).length+(isOn?1:0)}</div></div></div>${Object.keys(kpi).length?`<div style="padding-top:10px;border-top:1px solid var(--border)">${Object.entries(kpi).slice(0,4).map(([k,v])=>`<div style="display:flex;justify-content:space-between;font-size:.74rem;padding:2px 0;color:var(--muted)"><span>${k}</span><span style="color:var(--text);font-family:'JetBrains Mono',monospace">${v}</span></div>`).join('')}</div>`:''}</div>`}).join('')}
-
-function renderKPIOverview(){const t=today();document.getElementById('kpiGlobal').innerHTML=`<div class="stat-box"><div class="stat-num" style="color:var(--accent)">${TEAM.filter(m=>getU(m.id).clockedIn).length}</div><div class="stat-lbl">Online</div></div><div class="stat-box"><div class="stat-num" style="color:var(--accent2)">${TEAM.reduce((a,m)=>a+getU(m.id).todos.filter(x=>x.done).length,0)}</div><div class="stat-lbl">Tasks Done</div></div><div class="stat-box"><div class="stat-num" style="color:var(--accent3)">${MEETINGS.filter(m=>m.date===t).length}</div><div class="stat-lbl">Meetings</div></div>`;document.getElementById('kpiTeamRows').innerHTML=TEAM.map(m=>{const kpi=KPI[m.id]?.[t]||{};const color=tc(m.team);const u=getU(m.id);const ms=u.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.dur,0)+(u.clockedIn&&u.clockStart?Date.now()-u.clockStart:0);return`<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="avatar" style="width:36px;height:36px;background:${color}18;color:${color};border:1.5px solid ${color}44;font-family:'Syne',sans-serif;font-weight:800">${initials(m.name)}</div><div><div style="font-weight:700;font-family:'Syne',sans-serif">${m.name}</div><div style="font-size:.73rem;color:${color};font-weight:700">${m.team}</div></div><div style="margin-left:auto;font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:.86rem">${fmtDur(ms)}</div></div>${Object.keys(kpi).length?`<div class="metric-grid">${Object.entries(kpi).map(([k,v])=>`<div class="mc-stat"><div class="sl">${k}</div><div class="sv">${v}</div></div>`).join('')}</div>`:`<p style="color:var(--muted);font-size:.81rem">No KPIs today.</p>`}</div>`}).join('')}
-
-function renderTimeLog(){const rows=[];TEAM.forEach(m=>{const u=getU(m.id);u.sessions.forEach(s=>rows.push({m,...s}));if(u.clockedIn&&u.clockStart)rows.push({m,date:today(),start:u.clockStart,end:null,dur:Date.now()-u.clockStart,live:true})});rows.sort((a,b)=>b.start-a.start);document.getElementById('timeTbody').innerHTML=rows.length?rows.map(r=>`<tr><td>${r.m.name}</td><td style="color:${tc(r.m.team)};font-weight:700;font-size:.78rem">${r.m.team}</td><td style="color:var(--muted)">${r.date}</td><td class="mono">${fmtTime(r.start)}</td><td>${r.live?'<span style="color:var(--accent);font-size:.76rem;font-weight:700">Active</span>':`<span class="mono">${fmtTime(r.end)}</span>`}</td><td class="dur">${fmtDur(r.dur)}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No sessions.</td></tr>'}
-
-function renderSettings(){document.getElementById('memberMgmtList').innerHTML=TEAM.map(m=>{const color=tc(m.team);return`<div class="mli"><div class="avatar" style="width:36px;height:36px;background:${color}18;color:${color};border:1.5px solid ${color}33;font-family:'Syne',sans-serif;font-weight:800;flex-shrink:0">${initials(m.name)}</div><div class="mli-info"><div class="mli-name">${m.name}</div><div class="mli-role" style="color:${color}">${m.team}${m.tg?' · @'+m.tg:''}</div></div><span class="mli-pin">PIN: ${m.pin}</span><button class="mli-del" onclick="deleteMember('${m.id}')">🗑</button></div>`}).join('')}
-
-function addMember(){const name=document.getElementById('newName').value.trim(),team=document.getElementById('newTeam').value,pin=document.getElementById('newPin').value.trim(),tg=document.getElementById('newTg').value.trim();if(!name||!team||pin.length!==4){alert('Fill all fields. PIN = 4 digits.');return}const id=name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now();TEAM.push({id,name,team,pin,tg});saveTeam();document.getElementById('addMemberModal').style.display='none';['newName','newPin','newTg'].forEach(i=>document.getElementById(i).value='');rebuildSelect();renderSettings()}
-function deleteMember(id){if(!confirm('Delete member?'))return;TEAM=TEAM.filter(m=>m.id!==id);saveTeam();rebuildSelect();renderSettings()}
-
-function exportPDF(){const{jsPDF}=window.jspdf;const doc=new jsPDF();const t=today();doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('TeamFlow Scale — Report',20,20);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(100);doc.text(`Generated: ${t}`,20,28);let y=40;doc.setTextColor(0);TEAM.forEach(m=>{const u=getU(m.id);const ms=u.sessions.reduce((a,s)=>a+s.dur,0);const done=u.todos.filter(x=>x.done).length;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text(`${m.name} — ${m.team}`,20,y);y+=6;doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(`Hours: ${fmtDur(ms)}  Tasks: ${done}/${u.todos.length}`,25,y);y+=10;if(y>260){doc.addPage();y=20}});doc.save(`teamflow-${t}.pdf`)}
-
-setInterval(()=>{if(isManager){const active=document.querySelector('.panel.active');if(active?.id==='panel-team')renderTeam();if(active?.id==='panel-timelog')renderTimeLog();if(active?.id==='panel-kpioverview')renderKPIOverview()}},15000);
+},15000);
 </script>
 </body>
 </html>
